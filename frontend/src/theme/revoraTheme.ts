@@ -103,10 +103,13 @@ export const revoraTheme = createTheme({
         root: {
           borderRadius: 4,
           padding: "10px 20px",
-        },
-        containedPrimary: {
-          backgroundColor: "#E11D2E",
-          "&:hover": { backgroundColor: "#c31322" },
+
+          "&.MuiButton-containedPrimary": {
+            backgroundColor: "#E11D2E",
+            "&:hover": {
+              backgroundColor: "#c31322",
+            },
+          },
         },
         outlined: {
           borderColor: "rgba(244,241,234,0.22)",
