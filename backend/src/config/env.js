@@ -21,7 +21,10 @@ export const env = {
   MONGODB_URI: required("MONGODB_URI"),
   JWT_SECRET: jwtSecret,
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "7d",
-  FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN || "http://localhost:3000",
+  FRONTEND_ORIGINS: (process.env.FRONTEND_ORIGIN || "http://localhost:3000")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean),
   COOKIE_NAME: "revora_token",
   SEED_ADMIN_EMAIL: process.env.SEED_ADMIN_EMAIL || "admin@revora.com",
   SEED_USER_EMAIL: process.env.SEED_USER_EMAIL || "user@revora.com",

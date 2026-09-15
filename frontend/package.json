@@ -2,6 +2,9 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,6 +17,7 @@
     "@mui/icons-material": "^9.4.0",
     "@mui/material": "^9.4.0",
     "@mui/material-nextjs": "^9.4.0",
+    "@netlify/plugin-nextjs": "^5.15.5",
     "@tanstack/react-query": "^5.102.8",
     "gsap": "^3.15.0",
     "next": "16.3.5",

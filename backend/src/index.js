@@ -13,10 +13,24 @@ import { buildsRouter, favoritesRouter, partsRouter } from "./routes/builds.rout
 
 const app = express();
 
+app.set("trust proxy", 1);
 app.use(helmet());
 app.use(
   cors({
-    origin: env.FRONTEND_ORIGIN,
+    origin(origin, callback) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      const allowed = env.FRONTEND_ORIGINS.some(
+        (entry) => entry === origin || (entry.endsWith("*") && origin.endsWith(entry.slice(0, -1))),
+      );
+      if (allowed || origin.endsWith(".netlify.app")) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
     credentials: true,
   }),
 );
