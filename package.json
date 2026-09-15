@@ -1,0 +1,16 @@
+{
+  "name": "revora",
+  "version": "1.0.0",
+  "private": true,
+  "description": "REVORA — Build. Tune. Drive. Premium automotive platform.",
+  "scripts": {
+    "dev": "concurrently -n api,web -c red,cyan \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "seed": "npm run seed --prefix backend",
+    "install:all": "npm install --prefix frontend && npm install --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
