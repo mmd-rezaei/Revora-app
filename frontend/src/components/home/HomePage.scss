@@ -1,0 +1,848 @@
+.home-page {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+
+  // Important:
+  // GSAP horizontal transforms should never create
+  // horizontal overflow on the document itself.
+  isolation: isolate;
+}
+
+/* =========================================================
+   GLOBAL SCROLL PROGRESS
+   ========================================================= */
+
+.page-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+
+  width: 100%;
+  height: 2px;
+
+  background: linear-gradient(90deg, #ff4a00, #ff8a00);
+
+  transform: scaleX(0);
+  transform-origin: left center;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero-scroll-zone {
+  position: relative;
+
+  width: 100%;
+  max-width: 100%;
+
+  overflow: hidden;
+
+  min-height: 120vh;
+}
+
+.hero-pin-stage {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1.05fr 1.45fr;
+
+  align-items: center;
+
+  min-height: min(76vh, 680px);
+
+  padding: 40px 64px;
+
+  gap: 48px;
+
+  overflow: hidden;
+
+  transform-style: preserve-3d;
+}
+
+.hero-bg-depth {
+  position: absolute;
+  inset: -20%;
+
+  z-index: 0;
+
+  background: var(--revora-hero-glow, transparent);
+
+  pointer-events: none;
+
+  transform-origin: center;
+}
+
+.hero-wipe {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  z-index: 3;
+
+  height: 22%;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--revora-bg, #050505)
+  );
+
+  transform-origin: top;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   HERO COPY
+   ========================================================= */
+
+.hero-copy {
+  position: relative;
+  z-index: 4;
+
+  min-width: 0;
+
+  transform-style: preserve-3d;
+}
+
+.hero-title {
+  margin: 16px 0 !important;
+
+  font-size: 92px !important;
+  line-height: 0.95 !important;
+
+  perspective: 1000px;
+}
+
+.hero-line {
+  display: block;
+
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+}
+
+.hero-sub {
+  max-width: 480px;
+
+  margin-bottom: 32px !important;
+
+  font-size: 18px !important;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 16px;
+}
+
+.hero-cta {
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   HERO VISUAL
+   ========================================================= */
+
+.hero-visual {
+  position: relative;
+  z-index: 4;
+
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+
+  align-items: center;
+
+  width: 100%;
+  max-width: 650px;
+
+  margin-left: auto;
+
+  gap: 32px;
+
+  transform-style: preserve-3d;
+}
+
+/* =========================================================
+   HERO SPECS
+   ========================================================= */
+
+.hero-specs {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  min-width: 0;
+
+  gap: 20px;
+
+  order: 1;
+}
+
+.hero-car-name {
+  color: #ff4a00 !important;
+
+  font-size: 10px !important;
+  font-weight: 800 !important;
+
+  letter-spacing: 0.14em !important;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-spec {
+  position: relative;
+
+  padding: 4px 0 4px 12px;
+
+  border-left: 2px solid rgba(255, 74, 0, 0.45);
+
+  will-change: transform, opacity, filter;
+}
+
+.hero-spec-label {
+  display: block;
+
+  color: rgba(255, 255, 255, 0.4) !important;
+
+  font-size: 9px !important;
+  font-weight: 700 !important;
+
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase;
+}
+
+.hero-spec-value {
+  margin-top: 3px !important;
+
+  color: #fff !important;
+
+  font-family: var(--revora-spec-font, inherit) !important;
+
+  font-size: 21px !important;
+  font-weight: 600 !important;
+
+  line-height: 1 !important;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   HERO IMAGE
+   ========================================================= */
+
+.hero-image {
+  position: relative;
+
+  display: block;
+
+  width: 100%;
+  max-width: 100%;
+
+  aspect-ratio: 16 / 10;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+
+  text-decoration: none;
+
+  transform-style: preserve-3d;
+  transform-origin: center center;
+
+  will-change: transform, opacity, clip-path;
+
+  order: 2;
+}
+
+.hero-image-glow {
+  position: absolute;
+
+  inset: -20px;
+
+  z-index: 0;
+
+  background: radial-gradient(circle, rgba(255, 74, 0, 0.22), transparent 68%);
+
+  opacity: 0.5;
+
+  pointer-events: none;
+
+  will-change: transform, opacity;
+}
+
+.hero-image-inner {
+  position: absolute;
+
+  inset: -8% -5%;
+
+  z-index: 1;
+
+  transform-style: preserve-3d;
+
+  will-change: transform;
+}
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+.section-heading-container {
+  position: relative;
+  z-index: 5;
+
+  margin-bottom: 40px;
+}
+
+.section-title {
+  position: relative;
+
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   FEATURED MACHINES
+   ========================================================= */
+
+.car-gallery-section {
+  position: relative;
+
+  width: 100%;
+  max-width: 100%;
+
+  padding: 80px 0;
+
+  overflow: hidden;
+}
+
+/*
+ * This is the actual viewport.
+ *
+ * IMPORTANT:
+ * The track can be wider than the screen,
+ * but this wrapper must never be wider than the viewport.
+ */
+
+.horizontal-viewport {
+  position: relative;
+
+  width: 100%;
+  max-width: 100%;
+
+  overflow: hidden;
+}
+
+/*
+ * GSAP moves this element horizontally.
+ *
+ * width: max-content is intentional.
+ * flex-shrink: 0 on cards prevents cards from collapsing.
+ */
+
+.featured-track {
+  display: flex;
+  align-items: stretch;
+
+  width: max-content;
+  max-width: none;
+
+  gap: 24px;
+
+  padding: 0 64px 24px;
+
+  perspective: 1200px;
+
+  will-change: transform;
+
+  transform-style: preserve-3d;
+}
+
+.featured-card {
+  flex: 0 0 360px;
+
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
+
+  transform-style: preserve-3d;
+
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   POPULAR BRANDS
+   ========================================================= */
+
+.brand-scroll-section {
+  position: relative;
+
+  width: 100%;
+  max-width: 100%;
+
+  padding: 96px 0;
+
+  overflow: hidden;
+}
+
+.horizontal-viewport--brands {
+  overflow: hidden;
+}
+
+.brand-track {
+  display: flex;
+  align-items: stretch;
+
+  width: max-content;
+  max-width: none;
+
+  gap: 16px;
+
+  margin-top: 40px;
+
+  padding: 0 64px 24px;
+
+  perspective: 1200px;
+
+  will-change: transform;
+
+  transform-style: preserve-3d;
+}
+
+.brand-card {
+  flex: 0 0 220px;
+
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+
+  min-height: 150px;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: inherit;
+
+  text-decoration: none;
+
+  transform-style: preserve-3d;
+
+  will-change: transform, opacity;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease;
+
+  &:hover {
+    border-color: #ff4a00;
+
+    background: rgba(255, 74, 0, 0.035);
+  }
+}
+
+.brand-card__country {
+  color: rgba(255, 255, 255, 0.4) !important;
+
+  font-size: 9px !important;
+  font-weight: 700 !important;
+
+  letter-spacing: 0.12em !important;
+}
+
+.brand-card__name {
+  margin-top: 4px !important;
+
+  color: #fff !important;
+
+  font-size: 24px !important;
+
+  line-height: 1.1 !important;
+}
+
+.brand-card__count {
+  margin-top: 12px !important;
+
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* =========================================================
+   LATEST CARS
+   ========================================================= */
+
+.latest-section {
+  padding-top: 96px;
+  padding-bottom: 96px;
+}
+
+.latest-grid {
+  margin-top: 8px !important;
+
+  perspective: 1200px;
+}
+
+.latest-card {
+  min-width: 0;
+
+  transform-style: preserve-3d;
+
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   BUILD CTA
+   ========================================================= */
+
+.build-cta {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 300px;
+
+  margin-top: 80px;
+
+  padding: 56px;
+
+  gap: 32px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.025);
+
+  transform-origin: center center;
+
+  will-change: transform, opacity, clip-path;
+}
+
+.build-cta-glow {
+  position: absolute;
+
+  top: 50%;
+  right: -120px;
+
+  width: 500px;
+  height: 500px;
+
+  transform: translateY(-50%);
+
+  background: radial-gradient(circle, rgba(255, 74, 0, 0.16), transparent 65%);
+
+  pointer-events: none;
+
+  will-change: transform, opacity;
+}
+
+.build-cta-content {
+  position: relative;
+  z-index: 1;
+
+  min-width: 0;
+
+  will-change: transform, opacity;
+}
+
+.build-cta-title {
+  margin-bottom: 8px !important;
+}
+
+.build-cta-button {
+  position: relative;
+  z-index: 1;
+
+  flex-shrink: 0;
+
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .hero-pin-stage {
+    grid-template-columns: 1fr 1.25fr;
+
+    padding: 40px;
+    gap: 32px;
+  }
+
+  .hero-title {
+    font-size: 72px !important;
+  }
+
+  .hero-visual {
+    grid-template-columns: 120px minmax(0, 1fr);
+
+    gap: 24px;
+  }
+
+  .featured-track,
+  .brand-track {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 899px) {
+  .hero-scroll-zone {
+    min-height: 120vh;
+  }
+
+  .hero-pin-stage {
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+
+    min-height: auto;
+
+    padding: 40px 24px 60px;
+
+    gap: 40px;
+  }
+
+  .hero-copy {
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: 64px !important;
+  }
+
+  .hero-sub {
+    max-width: 100%;
+
+    font-size: 16px !important;
+  }
+
+  .hero-visual {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    max-width: none;
+
+    margin-left: 0;
+
+    gap: 24px;
+  }
+
+  .hero-image {
+    width: 100%;
+
+    order: 1;
+  }
+
+  .hero-specs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    width: 100%;
+
+    gap: 18px;
+
+    order: 2;
+  }
+
+  .hero-spec {
+    min-width: 0;
+  }
+
+  .hero-spec-value {
+    font-size: 18px !important;
+  }
+
+  .car-gallery-section {
+    padding: 64px 0;
+  }
+
+  .brand-scroll-section {
+    padding: 72px 0;
+  }
+
+  .featured-track,
+  .brand-track {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .featured-card {
+    flex-basis: 78vw;
+
+    width: 78vw;
+    min-width: 78vw;
+    max-width: 78vw;
+  }
+
+  .brand-card {
+    flex-basis: 210px;
+
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+  }
+
+  .latest-section {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+
+  .build-cta {
+    align-items: flex-start;
+    flex-direction: column;
+
+    min-height: 260px;
+
+    margin-top: 56px;
+
+    padding: 32px;
+  }
+
+  .build-cta-button {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .hero-pin-stage {
+    padding: 32px 16px 48px;
+
+    gap: 32px;
+  }
+
+  .hero-title {
+    font-size: 52px !important;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-cta {
+    flex: 1 1 auto;
+  }
+
+  .hero-specs {
+    gap: 14px;
+  }
+
+  .hero-spec {
+    padding-left: 10px;
+  }
+
+  .hero-spec-value {
+    font-size: 16px !important;
+  }
+
+  .featured-track {
+    gap: 16px;
+
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .brand-track {
+    gap: 12px;
+
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .featured-card {
+    flex-basis: calc(100vw - 32px);
+
+    width: calc(100vw - 32px);
+    min-width: calc(100vw - 32px);
+    max-width: calc(100vw - 32px);
+  }
+
+  .brand-card {
+    flex-basis: 200px;
+
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+
+    padding: 20px;
+  }
+
+  .build-cta {
+    padding: 24px;
+  }
+
+  .build-cta-glow {
+    right: -220px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+  .hero-title {
+    font-size: 46px !important;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-cta {
+    width: 100%;
+  }
+
+  .hero-specs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .featured-card {
+    flex-basis: calc(100vw - 24px);
+
+    width: calc(100vw - 24px);
+    min-width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page *,
+  .home-page *::before,
+  .home-page *::after {
+    scroll-behavior: auto !important;
+  }
+}

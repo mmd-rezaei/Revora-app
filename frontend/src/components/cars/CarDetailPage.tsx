@@ -92,7 +92,7 @@ export default function CarDetailPage({ params }: { params: Promise<{ slug: stri
         ref={heroRef}
         sx={{
           position: "relative",
-          height: { xs: 360, md: 580 },
+          height: { xs: 260, md: 420 },
           mt: "calc(var(--navbar-height) * -1)",
           pt: "var(--navbar-height)",
           overflow: "hidden",
