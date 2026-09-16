@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
@@ -8,27 +9,57 @@ import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Image from "next/image";
 import Link from "next/link";
+import gsap from "gsap";
 import type { Car } from "@/types";
 import { specFont } from "@/theme/revoraTheme";
+import { prefersReducedMotion } from "@/lib/gsap/gsapUtils";
+import { revoraColors } from "@/theme/colors";
 
-export default function CarCard({ car }: { car: Car }) {
+type CarCardProps = {
+  car: Car;
+  href?: string;
+};
+
+export default function CarCard({ car, href }: CarCardProps) {
+  const targetHref = href ?? `/cars/${car.slug}`;
+  const cardRef = useRef<HTMLDivElement>(null);
   const image = car.images[0] || "/next.svg";
 
+  function onEnter() {
+    if (prefersReducedMotion() || !cardRef.current) return;
+    gsap.to(cardRef.current, { y: -6, duration: 0.35, ease: "power2.out" });
+    gsap.to(cardRef.current.querySelector(".car-card-image"), { scale: 1.06, duration: 0.5, ease: "power2.out" });
+  }
+
+  function onLeave() {
+    if (prefersReducedMotion() || !cardRef.current) return;
+    gsap.to(cardRef.current, { y: 0, duration: 0.35, ease: "power2.out" });
+    gsap.to(cardRef.current.querySelector(".car-card-image"), { scale: 1, duration: 0.5, ease: "power2.out" });
+  }
+
   return (
-    <Card sx={{ height: "100%", overflow: "hidden", "&:hover img": { transform: "scale(1.05)" } }}>
-      <CardActionArea component={Link} href={`/cars/${car.slug}`} sx={{ height: "100%", alignItems: "stretch", display: "flex", flexDirection: "column" }}>
-        <Box sx={{ position: "relative", aspectRatio: "16/10", overflow: "hidden", bgcolor: "#111" }}>
-          <Image
-            src={image}
-            alt={`${car.brandName} ${car.modelName} ${car.trim}`}
-            fill
-            sizes="(max-width: 900px) 100vw, 33vw"
-            style={{ objectFit: "cover", transition: "transform 0.6s ease" }}
-          />
+    <Card
+      ref={cardRef}
+      className="gsap-stagger-item"
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      sx={{ height: "100%", overflow: "hidden" }}
+    >
+      <CardActionArea component={Link} href={targetHref} sx={{ height: "100%", alignItems: "stretch", display: "flex", flexDirection: "column" }}>
+        <Box sx={{ position: "relative", aspectRatio: "16/10", overflow: "hidden", bgcolor: revoraColors.elevated }}>
+          <Box className="car-card-image" sx={{ position: "absolute", inset: 0 }}>
+            <Image
+              src={image}
+              alt={`${car.brandName} ${car.modelName} ${car.trim}`}
+              fill
+              sizes="(max-width: 900px) 100vw, 33vw"
+              style={{ objectFit: "cover" }}
+            />
+          </Box>
           <Chip
             label={car.year}
             size="small"
-            sx={{ position: "absolute", top: 12, left: 12, bgcolor: "rgba(5,5,6,0.72)", color: "#F4F1EA" }}
+            sx={{ position: "absolute", top: 12, left: 12, bgcolor: "rgba(12, 24, 41, 0.78)", color: revoraColors.ice }}
           />
         </Box>
         <CardContent sx={{ width: "100%" }}>

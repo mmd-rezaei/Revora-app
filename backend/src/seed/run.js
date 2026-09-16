@@ -25,25 +25,32 @@ export async function seedDatabase({ reset = false } = {}) {
     ]);
   }
 
+  const forceReseed = process.env.SEED_FORCE === "1" || process.env.SEED_FORCE === "true";
   const existingCars = await Car.countDocuments();
-  if (existingCars > 0) return { skipped: true, carCount: existingCars };
+  if (existingCars > 0 && !forceReseed) {
+    return { skipped: true, carCount: existingCars };
+  }
+
+  if (forceReseed && existingCars > 0) {
+    await Promise.all([
+      Brand.deleteMany({}),
+      VehicleModel.deleteMany({}),
+      Generation.deleteMany({}),
+      Car.deleteMany({}),
+      TuningPart.deleteMany({}),
+    ]);
+  }
 
   const passwordHash = await bcrypt.hash(env.SEED_PASSWORD, 12);
+  const adminEmail = env.SEED_ADMIN_EMAIL.toLowerCase();
+  const userEmail = env.SEED_USER_EMAIL.toLowerCase();
 
-  await User.create([
-    {
-      email: env.SEED_ADMIN_EMAIL.toLowerCase(),
-      passwordHash,
-      name: "REVORA Admin",
-      role: "admin",
-    },
-    {
-      email: env.SEED_USER_EMAIL.toLowerCase(),
-      passwordHash,
-      name: "Alex Driver",
-      role: "user",
-    },
-  ]);
+  if (!(await User.exists({ email: adminEmail }))) {
+    await User.create({ email: adminEmail, passwordHash, name: "REVORA Admin", role: "admin" });
+  }
+  if (!(await User.exists({ email: userEmail }))) {
+    await User.create({ email: userEmail, passwordHash, name: "Alex Driver", role: "user" });
+  }
 
   let carCount = 0;
 

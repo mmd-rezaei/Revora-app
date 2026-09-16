@@ -10,6 +10,7 @@ import RevoraButton from "@/components/ui/RevoraButton";
 import PageLoader from "@/components/ui/PageLoader";
 import EmptyState from "@/components/ui/EmptyState";
 import { approveCar, fetchPendingCars, rejectCar } from "@/lib/api/cars";
+import { revoraColors } from "@/theme/colors";
 
 function AdminContent() {
   const queryClient = useQueryClient();
@@ -34,7 +35,7 @@ function AdminContent() {
         <EmptyState title="Queue is clear" body="No pending submissions right now." />
       ) : (
         pending.map((car) => (
-          <Box key={car.id} sx={{ p: 3, mb: 2, border: "1px solid rgba(244,241,234,0.08)", bgcolor: "#0E0E11" }}>
+          <Box key={car.id} sx={{ p: 3, mb: 2, border: `1px solid ${revoraColors.border}`, bgcolor: revoraColors.paper }}>
             <Chip label={car.status} size="small" sx={{ mb: 1 }} />
             <Typography variant="h5">{car.brandName} {car.modelName} {car.trim}</Typography>
             <Typography color="text.secondary">{car.year} · {car.horsepower} HP · {car.engine}</Typography>

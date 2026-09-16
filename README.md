@@ -27,6 +27,12 @@ Open [http://localhost:3000](http://localhost:3000).
 
 If MongoDB is not installed, the API starts an in-memory database and seeds demo cars automatically. Install MongoDB locally later if you want data to persist between restarts.
 
+The seed catalog includes **Iranian brands** (Iran Khodro, Saipa) plus global manufacturers. To refresh the catalog after updates:
+
+```bash
+npm run seed:force
+```
+
 ## Demo accounts
 
 After seeding, sign in with:

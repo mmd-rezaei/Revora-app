@@ -1,6 +1,7 @@
 "use client";
 
 import { createTheme } from "@mui/material/styles";
+import { revoraColors } from "./colors";
 
 declare module "@mui/material/styles" {
   interface TypeBackground {
@@ -11,16 +12,16 @@ declare module "@mui/material/styles" {
 export const revoraTheme = createTheme({
   palette: {
     mode: "dark",
-    primary: { main: "#E11D2E", contrastText: "#F4F1EA" },
-    secondary: { main: "#C5C1B6", contrastText: "#050506" },
+    primary: { main: revoraColors.signal, contrastText: revoraColors.ice },
+    secondary: { main: revoraColors.steel, contrastText: revoraColors.bg },
     background: {
-      default: "#050506",
-      paper: "#0E0E11",
-      elevated: "#16161A",
+      default: revoraColors.bg,
+      paper: revoraColors.paper,
+      elevated: revoraColors.elevated,
     },
-    text: { primary: "#F4F1EA", secondary: "#8A8F98" },
-    divider: "rgba(244,241,234,0.08)",
-    error: { main: "#E11D2E" },
+    text: { primary: revoraColors.ice, secondary: revoraColors.steel },
+    divider: revoraColors.border,
+    error: { main: revoraColors.signal },
     success: { main: "#3DDC97" },
   },
   typography: {
@@ -57,43 +58,19 @@ export const revoraTheme = createTheme({
     },
   },
   shape: { borderRadius: 8 },
-  shadows: [
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-    "none",
-  ],
+  shadows: Array(25).fill("none") as unknown as ReturnType<typeof createTheme>["shadows"],
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#050506",
-          color: "#F4F1EA",
+          backgroundColor: revoraColors.bg,
+          backgroundImage: revoraColors.gradient,
+          backgroundAttachment: "fixed",
+          color: revoraColors.ice,
         },
         "::selection": {
-          backgroundColor: "#E11D2E",
-          color: "#F4F1EA",
+          backgroundColor: revoraColors.signal,
+          color: revoraColors.ice,
         },
       },
     },
@@ -103,20 +80,17 @@ export const revoraTheme = createTheme({
         root: {
           borderRadius: 4,
           padding: "10px 20px",
-
           "&.MuiButton-containedPrimary": {
-            backgroundColor: "#E11D2E",
-            "&:hover": {
-              backgroundColor: "#c31322",
-            },
+            backgroundColor: revoraColors.signal,
+            "&:hover": { backgroundColor: "#c31322" },
           },
         },
         outlined: {
-          borderColor: "rgba(244,241,234,0.22)",
-          color: "#F4F1EA",
+          borderColor: revoraColors.borderHover,
+          color: revoraColors.ice,
           "&:hover": {
-            borderColor: "#F4F1EA",
-            backgroundColor: "rgba(244,241,234,0.04)",
+            borderColor: revoraColors.ice,
+            backgroundColor: "rgba(174, 203, 235, 0.06)",
           },
         },
       },
@@ -125,8 +99,8 @@ export const revoraTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: "none",
-          backgroundColor: "#0E0E11",
-          border: "1px solid rgba(244,241,234,0.08)",
+          backgroundColor: revoraColors.paper,
+          border: `1px solid ${revoraColors.border}`,
         },
       },
     },
@@ -134,9 +108,13 @@ export const revoraTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: "none",
-          backgroundColor: "#0E0E11",
-          border: "1px solid rgba(244,241,234,0.08)",
+          backgroundColor: revoraColors.paper,
+          border: `1px solid ${revoraColors.border}`,
           borderRadius: 8,
+          transition: "border-color 0.3s ease, transform 0.3s ease",
+          "&:hover": {
+            borderColor: revoraColors.borderHover,
+          },
         },
       },
     },
@@ -146,11 +124,11 @@ export const revoraTheme = createTheme({
     MuiFilledInput: {
       styleOverrides: {
         root: {
-          backgroundColor: "#16161A",
+          backgroundColor: revoraColors.elevated,
           borderRadius: 6,
           "&:before, &:after": { display: "none" },
-          "&:hover": { backgroundColor: "#1c1c21" },
-          "&.Mui-focused": { backgroundColor: "#1c1c21" },
+          "&:hover": { backgroundColor: "#234060" },
+          "&.Mui-focused": { backgroundColor: "#234060" },
         },
       },
     },
@@ -158,9 +136,9 @@ export const revoraTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: "none",
-          backgroundColor: "rgba(5,5,6,0.78)",
+          backgroundColor: "rgba(12, 24, 41, 0.82)",
           backdropFilter: "blur(16px)",
-          borderBottom: "1px solid rgba(244,241,234,0.08)",
+          borderBottom: `1px solid ${revoraColors.border}`,
         },
       },
     },
@@ -168,8 +146,8 @@ export const revoraTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 4,
-          backgroundColor: "#16161A",
-          border: "1px solid rgba(244,241,234,0.08)",
+          backgroundColor: revoraColors.elevated,
+          border: `1px solid ${revoraColors.border}`,
         },
       },
     },

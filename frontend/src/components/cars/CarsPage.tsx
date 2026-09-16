@@ -17,8 +17,10 @@ import PageLoader from "@/components/ui/PageLoader";
 import EmptyState from "@/components/ui/EmptyState";
 import RevoraButton from "@/components/ui/RevoraButton";
 import PageReveal from "@/components/ui/PageReveal";
+import { useStaggerReveal } from "@/hooks/useScrollReveal";
 import { fetchCars } from "@/lib/api/cars";
 import { fetchBrands } from "@/lib/api/brands";
+import { revoraColors } from "@/theme/colors";
 
 const bodyTypes = ["Sedan", "Coupe", "Hatchback", "Wagon", "SUV", "Convertible", "Pickup", "Roadster"];
 const fuels = ["Petrol", "Diesel", "Hybrid", "Plug-in Hybrid", "Electric"];
@@ -58,6 +60,7 @@ export default function CarsPage() {
     queryKey: ["cars", filters],
     queryFn: () => fetchCars(filters),
   });
+  const gridRef = useStaggerReveal([data?.items.length, page]);
   const { data: brands = [] } = useQuery({ queryKey: ["brands"], queryFn: fetchBrands });
 
   const filterForm = (
@@ -106,8 +109,10 @@ export default function CarsPage() {
   return (
     <PageReveal>
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <SectionHeader title="Discover cars" subtitle="Search, filter, and open a machine. Then configure, tune, or compare." />
-        <Box sx={{ display: "flex", gap: 2, mb: 4, flexWrap: "wrap" }}>
+        <Box className="page-child">
+          <SectionHeader title="Discover cars" subtitle="Search, filter, and open a machine. Then configure, tune, or compare." />
+        </Box>
+        <Box className="page-child" sx={{ display: "flex", gap: 2, mb: 4, flexWrap: "wrap" }}>
           <TextField
             placeholder="Search brand, model, trim"
             value={search}
@@ -127,8 +132,10 @@ export default function CarsPage() {
         </Box>
 
         <Grid container spacing={4}>
-          <Grid size={{ xs: 12, md: 3 }} sx={{ display: { xs: "none", md: "block" } }}>
-            {filterForm}
+          <Grid size={{ xs: 12, md: 3 }} sx={{ display: { xs: "none", md: "block" } }} className="page-child">
+            <Box sx={{ p: 2.5, border: `1px solid ${revoraColors.border}`, bgcolor: revoraColors.paper, borderRadius: 1 }}>
+              {filterForm}
+            </Box>
           </Grid>
           <Grid size={{ xs: 12, md: 9 }}>
             {isLoading ? (
@@ -137,13 +144,15 @@ export default function CarsPage() {
               <EmptyState title="No cars match" body="Widen the filters or try another search." />
             ) : (
               <>
-                <Grid container spacing={3}>
-                  {data.items.map((car) => (
-                    <Grid key={car.id} size={{ xs: 12, sm: 6 }}>
-                      <CarCard car={car} />
-                    </Grid>
-                  ))}
-                </Grid>
+                <Box ref={gridRef} className="gsap-stagger-container">
+                  <Grid container spacing={3}>
+                    {data.items.map((car) => (
+                      <Grid key={car.id} size={{ xs: 12, sm: 6 }} className="gsap-stagger-item">
+                        <CarCard car={car} />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
                 {data.pages > 1 ? (
                   <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
                     <Pagination page={page} count={data.pages} onChange={(_, value) => setPage(value)} color="primary" />

@@ -8,9 +8,14 @@
     "dev:frontend": "npm run dev --prefix frontend",
     "dev:backend": "npm run dev --prefix backend",
     "seed": "npm run seed --prefix backend",
+    "seed:force": "npm run seed:force --prefix backend",
     "install:all": "npm install --prefix frontend && npm install --prefix backend"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "sass": "^1.104.1",
+    "scss": "^0.2.4"
   }
 }

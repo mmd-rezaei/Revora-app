@@ -1,15 +1,24 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import { usePathname } from "next/navigation";
+import Navbar from "./Navbar/Navbar";
+import Footer from "./Footer/Footer";
 import CompareTray from "./CompareTray";
+import ScrollProgress from "./ScrollProgress";
+import GlobalMotionLayer from "./GlobalMotionLayer";
+import { useRouteScrollRefresh } from "@/hooks/useScrollReveal";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  useRouteScrollRefresh(pathname);
+
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative" }}>
+      <GlobalMotionLayer />
+      <ScrollProgress />
       <Navbar />
-      <Box component="main" sx={{ flex: 1 }}>
+      <Box component="main" sx={{ flex: 1, position: "relative", zIndex: 1, pt: "var(--navbar-height)" }}>
         {children}
       </Box>
       <CompareTray />

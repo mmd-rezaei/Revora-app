@@ -10,6 +10,7 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import PageLoader from "@/components/ui/PageLoader";
 import PageReveal from "@/components/ui/PageReveal";
 import { fetchBrands } from "@/lib/api/brands";
+import { revoraColors } from "@/theme/colors";
 
 export default function BrandsPage() {
   const { data: brands = [], isLoading } = useQuery({ queryKey: ["brands"], queryFn: fetchBrands });
@@ -28,8 +29,8 @@ export default function BrandsPage() {
                 sx={{
                   display: "block",
                   p: 3,
-                  border: "1px solid rgba(244,241,234,0.08)",
-                  bgcolor: "#0E0E11",
+                  border: `1px solid ${revoraColors.border}`,
+                  bgcolor: revoraColors.paper,
                   height: "100%",
                   "&:hover": { borderColor: "primary.main" },
                 }}
