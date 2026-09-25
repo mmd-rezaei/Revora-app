@@ -18,8 +18,24 @@ export type CarFilters = {
   limit?: number;
 };
 
+export type CarSuggestion = {
+  type: "brand" | "model" | "car";
+  label: string;
+  sublabel?: string;
+  slug?: string;
+  searchValue: string;
+  image?: string;
+};
+
+export type CarSuggestionsResponse = {
+  suggestions: CarSuggestion[];
+};
+
 export const fetchCars = (filters: CarFilters = {}) =>
   api<CarsResponse>(`/cars${queryString(filters)}`);
+
+export const fetchCarSuggestions = (q: string, limit = 10) =>
+  api<CarSuggestionsResponse>(`/cars/suggest${queryString({ q, limit })}`);
 
 export const fetchCar = (idOrSlug: string) => api<Car>(`/cars/${idOrSlug}`);
 

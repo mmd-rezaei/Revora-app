@@ -84,6 +84,89 @@ function carPayload(body, brandDoc, modelDoc, generationDoc, userId, status) {
   };
 }
 
+export const suggestCars = asyncHandler(async (req, res) => {
+  const { q, limit } = req.validated.query;
+
+  if (q.length < 2) {
+    return res.json({ suggestions: [] });
+  }
+
+  const safe = escapeRegex(q);
+  const regex = { $regex: safe, $options: "i" };
+  const carFilter = { status: "approved" };
+
+  const [brands, modelGroups, cars] = await Promise.all([
+    Brand.find({ isActive: true, name: regex }).sort({ name: 1 }).limit(5).lean(),
+    Car.aggregate([
+      { $match: { ...carFilter, modelName: regex } },
+      {
+        $group: {
+          _id: { brandName: "$brandName", modelName: "$modelName" },
+          count: { $sum: 1 },
+          image: { $first: { $arrayElemAt: ["$images", 0] } },
+        },
+      },
+      { $sort: { "_id.brandName": 1, "_id.modelName": 1 } },
+      { $limit: 5 },
+    ]),
+    Car.find({
+      ...carFilter,
+      $or: [{ brandName: regex }, { modelName: regex }, { trim: regex }, { generationName: regex }],
+    })
+      .select("slug brandName modelName trim year images")
+      .sort({ brandName: 1, modelName: 1, year: -1 })
+      .limit(limit)
+      .lean(),
+  ]);
+
+  /** @type {Array<{ type: string, label: string, sublabel?: string, slug?: string, searchValue: string, image?: string }>} */
+  const suggestions = [];
+  const seen = new Set();
+
+  for (const brand of brands) {
+    const key = `brand:${brand.name}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    suggestions.push({
+      type: "brand",
+      label: brand.name,
+      sublabel: brand.country,
+      searchValue: brand.name,
+    });
+  }
+
+  for (const group of modelGroups) {
+    const label = `${group._id.brandName} ${group._id.modelName}`;
+    const key = `model:${label}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    suggestions.push({
+      type: "model",
+      label,
+      sublabel: `${group.count} trims`,
+      searchValue: group._id.modelName,
+      image: group.image || undefined,
+    });
+  }
+
+  for (const car of cars) {
+    const label = `${car.brandName} ${car.modelName} ${car.trim}`;
+    const key = `car:${car.slug}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    suggestions.push({
+      type: "car",
+      label,
+      sublabel: String(car.year),
+      slug: car.slug,
+      searchValue: `${car.brandName} ${car.modelName}`,
+      image: car.images?.[0] || undefined,
+    });
+  }
+
+  res.json({ suggestions: suggestions.slice(0, limit) });
+});
+
 export const listCars = asyncHandler(async (req, res) => {
   const query = req.validated.query;
   const filter = {};

@@ -7,7 +7,13 @@
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
     "seed": "node src/seed/index.js",
-    "seed:force": "node src/seed/force.js"
+    "seed:force": "node src/seed/force.js",
+    "seed:sync-images": "node scripts/sync-catalog-images.mjs",
+    "seed:iran-images": "node scripts/fetch-iran-images.mjs",
+    "check:images": "node scripts/check-images.mjs",
+    "check:wiki-urls": "node scripts/verify-wiki-urls.mjs",
+    "check:wiki-urls:iran": "node scripts/verify-wiki-urls.mjs --iranian",
+    "check:cars": "node src/seed/check-catalog.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

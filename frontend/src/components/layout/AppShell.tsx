@@ -18,7 +18,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <GlobalMotionLayer />
       <ScrollProgress />
       <Navbar />
-      <Box component="main" sx={{ flex: 1, position: "relative", zIndex: 1, pt: "var(--navbar-height)" }}>
+      <Box
+        component="main"
+        sx={{
+          flex: 1,
+          position: "relative",
+          zIndex: 1,
+          pt: "var(--navbar-height)",
+          width: "100%",
+          maxWidth: "100%",
+          overflowX: "clip",
+        }}
+      >
         {children}
       </Box>
       <CompareTray />

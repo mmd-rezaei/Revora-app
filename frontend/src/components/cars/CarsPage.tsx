@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import CarSearchAutocomplete from "@/components/cars/CarSearchAutocomplete";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import Slider from "@mui/material/Slider";
@@ -29,6 +30,7 @@ const drives = ["RWD", "FWD", "AWD", "4WD"];
 
 export default function CarsPage() {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [bodyType, setBodyType] = useState("");
   const [fuelType, setFuelType] = useState("");
@@ -39,9 +41,14 @@ export default function CarsPage() {
   const [page, setPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedSearch(search.trim()), 320);
+    return () => window.clearTimeout(timer);
+  }, [search]);
+
   const filters = useMemo(
     () => ({
-      search: search || undefined,
+      search: debouncedSearch || undefined,
       brand: brand || undefined,
       bodyType: bodyType || undefined,
       fuelType: fuelType || undefined,
@@ -53,7 +60,7 @@ export default function CarsPage() {
       page,
       limit: 12,
     }),
-    [search, brand, bodyType, fuelType, transmission, driveType, hp, sort, page],
+    [debouncedSearch, brand, bodyType, fuelType, transmission, driveType, hp, sort, page],
   );
 
   const { data, isLoading } = useQuery({
@@ -113,10 +120,10 @@ export default function CarsPage() {
           <SectionHeader title="Discover cars" subtitle="Search, filter, and open a machine. Then configure, tune, or compare." />
         </Box>
         <Box className="page-child" sx={{ display: "flex", gap: 2, mb: 4, flexWrap: "wrap" }}>
-          <TextField
-            placeholder="Search brand, model, trim"
+          <CarSearchAutocomplete
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(next) => { setSearch(next); setPage(1); }}
+            onSubmit={() => setPage(1)}
             sx={{ flex: 1, minWidth: 220 }}
           />
           <TextField select label="Sort" value={sort} onChange={(e) => setSort(e.target.value)} sx={{ minWidth: 180 }}>

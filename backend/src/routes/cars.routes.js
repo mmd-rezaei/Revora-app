@@ -3,6 +3,7 @@ import { optionalAuth, requireAuth, requireAdmin } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 import {
   carsQuerySchema,
+  carsSuggestSchema,
   idParamSchema,
   rejectCarSchema,
   submitCarSchema,
@@ -11,6 +12,7 @@ import * as cars from "../controllers/cars.controller.js";
 
 const router = Router();
 
+router.get("/suggest", optionalAuth, validate(carsSuggestSchema), cars.suggestCars);
 router.get("/", optionalAuth, validate(carsQuerySchema), cars.listCars);
 router.post("/submit", requireAuth, validate(submitCarSchema), cars.submitCar);
 router.post("/", requireAuth, requireAdmin, validate(submitCarSchema), cars.createCarAdmin);

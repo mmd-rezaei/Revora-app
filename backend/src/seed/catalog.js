@@ -1,12 +1,22 @@
 import { iranianBrands } from "./iran-full.js";
 import { extendedGlobalBrands } from "./extended-global.js";
+import { collectCarKeys, mergeBrands } from "./catalog-builder.js";
+import {
+  buildGlobalExpansion,
+  globalExpansionStats,
+} from "./global-brand-expansion.js";
+import {
+  buildIranianExtra,
+  iranianExtraStats,
+} from "./iranian-extra-brands.js";
 import { carImg } from "./carImages.js";
 
 const coreCatalog = [
   {
     name: "BMW",
     country: "Germany",
-    description: "Precision engineering with a motorsport heartbeat. BMW on REVORA covers M cars from daily drivers to Competition machines.",
+    description:
+      "Precision engineering with a motorsport heartbeat. BMW on REVORA covers M cars from daily drivers to Competition machines.",
     models: [
       {
         name: "M3",
@@ -31,8 +41,14 @@ const coreCatalog = [
                 weight: 1780,
                 dimensions: { length: 4794, width: 1903, height: 1437 },
                 images: carImg("bmw_m3_g80"),
-                description: "The G80 M3 Competition is the current M benchmark: brutal midrange, xDrive traction, and a cabin built around the driver.",
-                features: ["M Drive Professional", "Carbon bucket seats", "Laser headlights", "Track mode"],
+                description:
+                  "The G80 M3 Competition is the current M benchmark: brutal midrange, xDrive traction, and a cabin built around the driver.",
+                features: [
+                  "M Drive Professional",
+                  "Carbon bucket seats",
+                  "Laser headlights",
+                  "Track mode",
+                ],
               },
             ],
           },
@@ -61,8 +77,13 @@ const coreCatalog = [
                 weight: 1725,
                 dimensions: { length: 4794, width: 1887, height: 1393 },
                 images: carImg("bmw_m4_g82"),
-                description: "Two-door M4 Competition: the same S58 fury as the M3, with a lower visual mass and a more focused coupe stance.",
-                features: ["M Carbon exterior", "Adaptive M suspension", "Head-up display"],
+                description:
+                  "Two-door M4 Competition: the same S58 fury as the M3, with a lower visual mass and a more focused coupe stance.",
+                features: [
+                  "M Carbon exterior",
+                  "Adaptive M suspension",
+                  "Head-up display",
+                ],
               },
             ],
           },
@@ -92,7 +113,8 @@ const coreCatalog = [
                 weight: 1825,
                 dimensions: { length: 4983, width: 1903, height: 1467 },
                 images: carImg("bmw_m5_f90_cs"),
-                description: "The rare F90 M5 CS is a homologation-feeling super saloon: gold wheels, carbon, and a V8 that never sounds finished.",
+                description:
+                  "The rare F90 M5 CS is a homologation-feeling super saloon: gold wheels, carbon, and a V8 that never sounds finished.",
                 features: ["CS aero", "Carbon roof", "Gold bronze wheels"],
               },
             ],
@@ -104,7 +126,8 @@ const coreCatalog = [
   {
     name: "Mercedes-Benz",
     country: "Germany",
-    description: "AMG performance with grand-tourer presence. From C63 to GT, Mercedes on REVORA is about controlled violence.",
+    description:
+      "AMG performance with grand-tourer presence. From C63 to GT, Mercedes on REVORA is about controlled violence.",
     models: [
       {
         name: "C-Class",
@@ -129,7 +152,8 @@ const coreCatalog = [
                 weight: 2111,
                 dimensions: { length: 4841, width: 1900, height: 1458 },
                 images: carImg("mercedes_c63_w206"),
-                description: "The new C63 trades the V8 for a Formula-inspired hybrid four. Controversial, explosive, and uniquely AMG.",
+                description:
+                  "The new C63 trades the V8 for a Formula-inspired hybrid four. Controversial, explosive, and uniquely AMG.",
                 features: ["P3 hybrid system", "Drift mode", "AMG Track Pace"],
               },
             ],
@@ -159,8 +183,13 @@ const coreCatalog = [
                 weight: 2045,
                 dimensions: { length: 5054, width: 1953, height: 1447 },
                 images: carImg("mercedes_amg_gt63"),
-                description: "Four-door AMG GT 63 S: long-legged V8 muscle with a cabin that still feels like a private jet.",
-                features: ["AMG Ride Control", "Burmester 3D", "Rear-axle steering"],
+                description:
+                  "Four-door AMG GT 63 S: long-legged V8 muscle with a cabin that still feels like a private jet.",
+                features: [
+                  "AMG Ride Control",
+                  "Burmester 3D",
+                  "Rear-axle steering",
+                ],
               },
             ],
           },
@@ -171,7 +200,8 @@ const coreCatalog = [
   {
     name: "Porsche",
     country: "Germany",
-    description: "The reference sports car. Carrera for the road, GT3 for the circuit — both belong in a REVORA garage.",
+    description:
+      "The reference sports car. Carrera for the road, GT3 for the circuit — both belong in a REVORA garage.",
     models: [
       {
         name: "911",
@@ -196,7 +226,8 @@ const coreCatalog = [
                 weight: 1515,
                 dimensions: { length: 4519, width: 1852, height: 1298 },
                 images: carImg("porsche_992_carrera_s"),
-                description: "The everyday 911. Turbocharged flat-six, PDK, and a chassis that still teaches every other sports car manners.",
+                description:
+                  "The everyday 911. Turbocharged flat-six, PDK, and a chassis that still teaches every other sports car manners.",
                 features: ["PASM", "Sport Chrono", "Rear-axle steering"],
               },
               {
@@ -215,8 +246,13 @@ const coreCatalog = [
                 weight: 1418,
                 dimensions: { length: 4573, width: 1852, height: 1279 },
                 images: carImg("porsche_992_gt3"),
-                description: "Motorsport 911 for the road. The 9,000-rpm NA six and a swan-neck wing that needs no explanation.",
-                features: ["Double wishbone front", "Track-focused aero", "Carbon ceramic brakes"],
+                description:
+                  "Motorsport 911 for the road. The 9,000-rpm NA six and a swan-neck wing that needs no explanation.",
+                features: [
+                  "Double wishbone front",
+                  "Track-focused aero",
+                  "Carbon ceramic brakes",
+                ],
               },
             ],
           },
@@ -227,7 +263,8 @@ const coreCatalog = [
   {
     name: "Nissan",
     country: "Japan",
-    description: "Godzilla and the Z. Nissan's performance story is turbocharged, AWD when it matters, and unapologetically analog.",
+    description:
+      "Godzilla and the Z. Nissan's performance story is turbocharged, AWD when it matters, and unapologetically analog.",
     models: [
       {
         name: "GT-R",
@@ -253,7 +290,8 @@ const coreCatalog = [
                 weight: 1752,
                 dimensions: { length: 4710, width: 1895, height: 1370 },
                 images: carImg("nissan_gtr_r35_nismo"),
-                description: "The last R35 NISMO. A 17-year legend with ATTESA AWD and a soundtrack that still fills a tunnel.",
+                description:
+                  "The last R35 NISMO. A 17-year legend with ATTESA AWD and a soundtrack that still fills a tunnel.",
                 features: ["NISMO aero", "Bilstein DampTronic", "Recaro seats"],
               },
             ],
@@ -283,8 +321,13 @@ const coreCatalog = [
                 weight: 1635,
                 dimensions: { length: 4380, width: 1865, height: 1315 },
                 images: carImg("nissan_z_nismo"),
-                description: "Modern Z Nismo: wider stance, retuned VR30, and a cabin that still feels like a Japanese sports car should.",
-                features: ["Nismo suspension", "Launch control", "Sport exhaust"],
+                description:
+                  "Modern Z Nismo: wider stance, retuned VR30, and a cabin that still feels like a Japanese sports car should.",
+                features: [
+                  "Nismo suspension",
+                  "Launch control",
+                  "Sport exhaust",
+                ],
               },
             ],
           },
@@ -295,7 +338,8 @@ const coreCatalog = [
   {
     name: "Toyota",
     country: "Japan",
-    description: "Gazoo Racing turned Toyota into a driver's brand again. Supra and GR Yaris punch far above their size.",
+    description:
+      "Gazoo Racing turned Toyota into a driver's brand again. Supra and GR Yaris punch far above their size.",
     models: [
       {
         name: "Supra",
@@ -320,8 +364,13 @@ const coreCatalog = [
                 weight: 1540,
                 dimensions: { length: 4380, width: 1865, height: 1295 },
                 images: carImg("toyota_supra_a90"),
-                description: "A90 GR Supra: BMW B58 in a Toyota body. Short wheelbase, long hood, and a chassis that loves to rotate.",
-                features: ["Adaptive suspension", "Launch control", "Active rear spoiler"],
+                description:
+                  "A90 GR Supra: BMW B58 in a Toyota body. Short wheelbase, long hood, and a chassis that loves to rotate.",
+                features: [
+                  "Adaptive suspension",
+                  "Launch control",
+                  "Active rear spoiler",
+                ],
               },
             ],
           },
@@ -350,7 +399,8 @@ const coreCatalog = [
                 weight: 1280,
                 dimensions: { length: 3995, width: 1805, height: 1455 },
                 images: carImg("toyota_gr_yaris"),
-                description: "A homologation special hiding as a supermarket hatch. GR-FOUR AWD and a three-cylinder that should not work this well.",
+                description:
+                  "A homologation special hiding as a supermarket hatch. GR-FOUR AWD and a three-cylinder that should not work this well.",
                 features: ["GR-FOUR AWD", "Torsen diffs", "Forged wheels"],
               },
             ],
@@ -362,7 +412,8 @@ const coreCatalog = [
   {
     name: "Ford",
     country: "United States",
-    description: "American performance, from Dark Horse Mustangs to the halo Ford GT.",
+    description:
+      "American performance, from Dark Horse Mustangs to the halo Ford GT.",
     models: [
       {
         name: "Mustang",
@@ -387,7 +438,8 @@ const coreCatalog = [
                 weight: 1760,
                 dimensions: { length: 4811, width: 1915, height: 1400 },
                 images: carImg("ford_mustang_dark_horse"),
-                description: "The S650 Dark Horse is the enthusiast Mustang: cross-plane V8, Tremec manual, and a rear end that still talks to you.",
+                description:
+                  "The S650 Dark Horse is the enthusiast Mustang: cross-plane V8, Tremec manual, and a rear end that still talks to you.",
                 features: ["MagneRide", "Tremec 6-speed", "Track apps"],
               },
             ],
@@ -418,7 +470,8 @@ const coreCatalog = [
                 weight: 1385,
                 dimensions: { length: 4763, width: 2004, height: 1110 },
                 images: carImg("ford_gt"),
-                description: "Le Mans silhouette for the road. Carbon everything, a mid-engine EcoBoost V6, and presence that stops traffic.",
+                description:
+                  "Le Mans silhouette for the road. Carbon everything, a mid-engine EcoBoost V6, and presence that stops traffic.",
                 features: ["Active aero", "Carbon tub", "Pushrod suspension"],
               },
             ],
@@ -430,7 +483,8 @@ const coreCatalog = [
   {
     name: "Ferrari",
     country: "Italy",
-    description: "Maranello's current generation: hybrid V6 theatre and the last of the twin-turbo V8 mid-engine cars.",
+    description:
+      "Maranello's current generation: hybrid V6 theatre and the last of the twin-turbo V8 mid-engine cars.",
     models: [
       {
         name: "296",
@@ -455,7 +509,8 @@ const coreCatalog = [
                 weight: 1470,
                 dimensions: { length: 4565, width: 1958, height: 1181 },
                 images: carImg("ferrari_296_gtb"),
-                description: "The 296 GTB proves a V6 hybrid can still feel like Ferrari: 8500 rpm, electric fill-in, and a shape that looks carved.",
+                description:
+                  "The 296 GTB proves a V6 hybrid can still feel like Ferrari: 8500 rpm, electric fill-in, and a shape that looks carved.",
                 features: ["Assetto Fiorano", "eManettino", "Active aero"],
               },
             ],
@@ -486,8 +541,13 @@ const coreCatalog = [
                 weight: 1435,
                 dimensions: { length: 4611, width: 1977, height: 1206 },
                 images: carImg("ferrari_f8_tributo"),
-                description: "A tribute to Ferrari's twin-turbo V8 era. Brutal midrange, SSC, and an engine cover that is basically jewelry.",
-                features: ["Side Slip Control", "F1-TCS", "Carbon racing seats"],
+                description:
+                  "A tribute to Ferrari's twin-turbo V8 era. Brutal midrange, SSC, and an engine cover that is basically jewelry.",
+                features: [
+                  "Side Slip Control",
+                  "F1-TCS",
+                  "Carbon racing seats",
+                ],
               },
             ],
           },
@@ -498,7 +558,8 @@ const coreCatalog = [
   {
     name: "Lamborghini",
     country: "Italy",
-    description: "Sant'Agata theatre. Naturally aspirated V10 drama and the Urus as a super-SUV outlier.",
+    description:
+      "Sant'Agata theatre. Naturally aspirated V10 drama and the Urus as a super-SUV outlier.",
     models: [
       {
         name: "Huracán",
@@ -523,7 +584,8 @@ const coreCatalog = [
                 weight: 1379,
                 dimensions: { length: 4567, width: 1933, height: 1165 },
                 images: carImg("lamborghini_huracan_tecnica"),
-                description: "The thinking Huracán. Rear-drive Tecnica sits between STO and EVO with a V10 that still revs like a superbike.",
+                description:
+                  "The thinking Huracán. Rear-drive Tecnica sits between STO and EVO with a V10 that still revs like a superbike.",
                 features: ["LDVI", "Rear-wheel steering", "ANIMA drive modes"],
               },
             ],
@@ -553,7 +615,8 @@ const coreCatalog = [
                 weight: 2197,
                 dimensions: { length: 5112, width: 2016, height: 1638 },
                 images: carImg("lamborghini_urus_s"),
-                description: "Super SUV without apology. The Urus S is a 2.2-tonne wedge that still hits 100 km/h in 3.5 seconds.",
+                description:
+                  "Super SUV without apology. The Urus S is a 2.2-tonne wedge that still hits 100 km/h in 3.5 seconds.",
                 features: ["ANIMA", "Air suspension", "Torque vectoring"],
               },
             ],
@@ -565,7 +628,8 @@ const coreCatalog = [
   {
     name: "Audi",
     country: "Germany",
-    description: "Quattro traction and RS aggression. Avant for the realists, R8 for the romantics.",
+    description:
+      "Quattro traction and RS aggression. Avant for the realists, R8 for the romantics.",
     models: [
       {
         name: "RS6",
@@ -590,8 +654,13 @@ const coreCatalog = [
                 weight: 2075,
                 dimensions: { length: 4995, width: 1951, height: 1460 },
                 images: carImg("audi_rs6_c8"),
-                description: "The family Trojan horse. RS6 Performance is a wagon that humiliates sports cars at midnight on an empty autobahn.",
-                features: ["RS sport exhaust", "All-wheel steering", "Dynamic package plus"],
+                description:
+                  "The family Trojan horse. RS6 Performance is a wagon that humiliates sports cars at midnight on an empty autobahn.",
+                features: [
+                  "RS sport exhaust",
+                  "All-wheel steering",
+                  "Dynamic package plus",
+                ],
               },
             ],
           },
@@ -621,8 +690,13 @@ const coreCatalog = [
                 weight: 1590,
                 dimensions: { length: 4429, width: 1940, height: 1236 },
                 images: carImg("audi_r8_v10"),
-                description: "The last Audi R8 V10. Shared DNA with the Huracán, rear-drive balance, and a scream you will not get again.",
-                features: ["Audi drive select", "Magnetic ride", "Carbon sideblades"],
+                description:
+                  "The last Audi R8 V10. Shared DNA with the Huracán, rear-drive balance, and a scream you will not get again.",
+                features: [
+                  "Audi drive select",
+                  "Magnetic ride",
+                  "Carbon sideblades",
+                ],
               },
             ],
           },
@@ -633,7 +707,8 @@ const coreCatalog = [
   {
     name: "Honda",
     country: "Japan",
-    description: "High-revving honesty. Type R for the street, NSX for the hybrid supercar chapter.",
+    description:
+      "High-revving honesty. Type R for the street, NSX for the hybrid supercar chapter.",
     models: [
       {
         name: "Civic",
@@ -658,7 +733,8 @@ const coreCatalog = [
                 weight: 1429,
                 dimensions: { length: 4594, width: 1890, height: 1401 },
                 images: carImg("honda_civic_type_r"),
-                description: "The FL5 Type R is the front-drive reference: a 6-speed that feels milled from a single billet and aero that actually works.",
+                description:
+                  "The FL5 Type R is the front-drive reference: a 6-speed that feels milled from a single billet and aero that actually works.",
                 features: ["LogR", "Adaptive dampers", "Rev-match"],
               },
             ],
@@ -689,7 +765,8 @@ const coreCatalog = [
                 weight: 1725,
                 dimensions: { length: 4487, width: 1939, height: 1204 },
                 images: carImg("honda_nsx_type_s"),
-                description: "The second-gen NSX Type S is Honda's hybrid supercar goodbye: SH-AWD, a twin-turbo V6, and surgical balance.",
+                description:
+                  "The second-gen NSX Type S is Honda's hybrid supercar goodbye: SH-AWD, a twin-turbo V6, and surgical balance.",
                 features: ["SH-AWD", "Carbon aero", "Track settings"],
               },
             ],
@@ -701,7 +778,8 @@ const coreCatalog = [
   {
     name: "Tesla",
     country: "United States",
-    description: "Electric performance as a straight-line event. Model S Plaid is the EV benchmark on REVORA.",
+    description:
+      "Electric performance as a straight-line event. Model S Plaid is the EV benchmark on REVORA.",
     models: [
       {
         name: "Model S",
@@ -726,7 +804,8 @@ const coreCatalog = [
                 weight: 2162,
                 dimensions: { length: 5021, width: 1987, height: 1431 },
                 images: carImg("tesla_model_s_plaid"),
-                description: "Three motors, carbon-wrapped rotors, and a 0–100 that still feels like a glitch in physics.",
+                description:
+                  "Three motors, carbon-wrapped rotors, and a 0–100 that still feels like a glitch in physics.",
                 features: ["Track mode", "Yoke optional", "1,000+ hp peak"],
               },
             ],
@@ -738,7 +817,8 @@ const coreCatalog = [
   {
     name: "Chevrolet",
     country: "United States",
-    description: "Mid-engine Corvette finally arrived. The C8 Z06 is America's accessible supercar.",
+    description:
+      "Mid-engine Corvette finally arrived. The C8 Z06 is America's accessible supercar.",
     models: [
       {
         name: "Corvette",
@@ -763,7 +843,8 @@ const coreCatalog = [
                 weight: 1561,
                 dimensions: { length: 4688, width: 2025, height: 1235 },
                 images: carImg("corvette_c8_z06"),
-                description: "The C8 Z06's LT6 is a 8,600-rpm flat-plane V8 that belongs next to European exotics, at a price that still feels American.",
+                description:
+                  "The C8 Z06's LT6 is a 8,600-rpm flat-plane V8 that belongs next to European exotics, at a price that still feels American.",
                 features: ["Z07 package", "Carbon aero", "Magnetic Ride 4.0"],
               },
             ],
@@ -774,8 +855,34 @@ const coreCatalog = [
   },
 ];
 
-/** Full world catalog: core + Iranian + extended global brands. */
-export const catalog = [...coreCatalog, ...iranianBrands, ...extendedGlobalBrands];
+const baseCatalog = mergeBrands(
+  mergeBrands(coreCatalog, iranianBrands),
+  extendedGlobalBrands,
+);
+const existingKeys = collectCarKeys(baseCatalog);
+const globalExpansionBrands = buildGlobalExpansion(existingKeys);
+const iranianExtraBrands = buildIranianExtra(existingKeys);
+
+/** Full world catalog: core + Iranian + extended + full brand lineups. */
+export const catalog = mergeBrands(
+  mergeBrands(baseCatalog, globalExpansionBrands),
+  iranianExtraBrands,
+);
+
+export const catalogStats = {
+  brands: catalog.length,
+  cars: catalog.reduce(
+    (n, b) =>
+      n +
+      b.models.reduce(
+        (m, mo) => m + mo.generations.reduce((g, ge) => g + ge.cars.length, 0),
+        0,
+      ),
+    0,
+  ),
+  globalExpansion: globalExpansionStats,
+  iranianExtra: iranianExtraStats,
+};
 
 export const tuningParts = [
   {
@@ -784,7 +891,8 @@ export const tuningParts = [
     category: "ecu",
     tier: "stage1",
     exclusiveGroup: "ecu",
-    description: "Optimized ignition, boost, and fueling within stock hardware limits.",
+    description:
+      "Optimized ignition, boost, and fueling within stock hardware limits.",
     effects: { horsepower: 45, torque: 60, reliability: -4, style: 2 },
     price: 890,
   },
@@ -794,7 +902,8 @@ export const tuningParts = [
     category: "ecu",
     tier: "stage2",
     exclusiveGroup: "ecu",
-    description: "Requires supporting intake and downpipe. More aggressive timing and boost.",
+    description:
+      "Requires supporting intake and downpipe. More aggressive timing and boost.",
     effects: { horsepower: 85, torque: 110, reliability: -10, style: 4 },
     price: 1290,
   },
@@ -804,7 +913,8 @@ export const tuningParts = [
     category: "intake",
     tier: "street",
     exclusiveGroup: null,
-    description: "High-flow filter and smoother intake tract for throttle response.",
+    description:
+      "High-flow filter and smoother intake tract for throttle response.",
     effects: { horsepower: 12, torque: 10, style: 4 },
     price: 420,
   },
@@ -824,8 +934,15 @@ export const tuningParts = [
     category: "exhaust",
     tier: "track",
     exclusiveGroup: "exhaust",
-    description: "Lightweight full system. Loud, expensive, and worth the soundtrack.",
-    effects: { horsepower: 22, torque: 16, weight: -14, style: 14, reliability: -3 },
+    description:
+      "Lightweight full system. Loud, expensive, and worth the soundtrack.",
+    effects: {
+      horsepower: 22,
+      torque: 16,
+      weight: -14,
+      style: 14,
+      reliability: -3,
+    },
     price: 4200,
   },
   {
@@ -834,7 +951,8 @@ export const tuningParts = [
     category: "downpipe",
     tier: "stage2",
     exclusiveGroup: null,
-    description: "Reduces backpressure after the turbo. Best paired with Stage 2 software.",
+    description:
+      "Reduces backpressure after the turbo. Best paired with Stage 2 software.",
     effects: { horsepower: 28, torque: 35, reliability: -6, style: 3 },
     price: 980,
   },
@@ -854,8 +972,15 @@ export const tuningParts = [
     category: "turbo",
     tier: "track",
     exclusiveGroup: "induction",
-    description: "Larger compressor and turbine for serious power. Needs supporting mods.",
-    effects: { horsepower: 130, torque: 160, reliability: -16, style: 6, topSpeed: 12 },
+    description:
+      "Larger compressor and turbine for serious power. Needs supporting mods.",
+    effects: {
+      horsepower: 130,
+      torque: 160,
+      reliability: -16,
+      style: 6,
+      topSpeed: 12,
+    },
     price: 3900,
   },
   {
@@ -864,7 +989,8 @@ export const tuningParts = [
     category: "supercharger",
     tier: "track",
     exclusiveGroup: "induction",
-    description: "Positive-displacement boost for NA engines. Instant throttle, extra heat.",
+    description:
+      "Positive-displacement boost for NA engines. Instant throttle, extra heat.",
     effects: { horsepower: 110, torque: 90, reliability: -14, style: 10 },
     price: 6500,
   },
@@ -874,7 +1000,8 @@ export const tuningParts = [
     category: "suspension",
     tier: "street",
     exclusiveGroup: "suspension",
-    description: "Height and damping control. Flatter through corners, firmer on broken pavement.",
+    description:
+      "Height and damping control. Flatter through corners, firmer on broken pavement.",
     effects: { handling: 14, style: 6, reliability: -2, weight: -4 },
     price: 2100,
   },
@@ -884,7 +1011,8 @@ export const tuningParts = [
     category: "suspension",
     tier: "track",
     exclusiveGroup: "suspension",
-    description: "Stiffer springs, more camber, less compromise. Built for circuit work.",
+    description:
+      "Stiffer springs, more camber, less compromise. Built for circuit work.",
     effects: { handling: 22, style: 4, braking: 4, reliability: -6 },
     price: 3400,
   },
@@ -904,7 +1032,8 @@ export const tuningParts = [
     category: "wheels",
     tier: "street",
     exclusiveGroup: null,
-    description: "Lighter unsprung mass. Quicker direction changes and cleaner looks.",
+    description:
+      "Lighter unsprung mass. Quicker direction changes and cleaner looks.",
     effects: { weight: -12, handling: 6, style: 10 },
     price: 3200,
   },
@@ -914,7 +1043,8 @@ export const tuningParts = [
     category: "tires",
     tier: "track",
     exclusiveGroup: "tires",
-    description: "Maximum dry grip. Noise, wear, and wet-weather drama included.",
+    description:
+      "Maximum dry grip. Noise, wear, and wet-weather drama included.",
     effects: { handling: 12, braking: 8, reliability: -5, style: 4 },
     price: 1600,
   },
@@ -924,7 +1054,8 @@ export const tuningParts = [
     category: "tires",
     tier: "street",
     exclusiveGroup: "tires",
-    description: "A usable compromise. Less ultimate grip, more everyday confidence.",
+    description:
+      "A usable compromise. Less ultimate grip, more everyday confidence.",
     effects: { handling: 3, braking: 2, reliability: 2 },
     price: 900,
   },
@@ -934,7 +1065,8 @@ export const tuningParts = [
     category: "drivetrain",
     tier: "street",
     exclusiveGroup: null,
-    description: "Puts power down on corner exit instead of lighting up one tire.",
+    description:
+      "Puts power down on corner exit instead of lighting up one tire.",
     effects: { handling: 8, style: 2 },
     price: 1850,
   },
@@ -944,8 +1076,13 @@ export const tuningParts = [
     category: "cooling",
     tier: "street",
     exclusiveGroup: null,
-    description: "Stabilizes oil temps on track days. The unglamorous reliability win.",
+    description:
+      "Stabilizes oil temps on track days. The unglamorous reliability win.",
     effects: { reliability: 10 },
     price: 540,
   },
 ];
+
+if (typeof window !== "undefined") {
+  import("./validateCatalog.js");
+}

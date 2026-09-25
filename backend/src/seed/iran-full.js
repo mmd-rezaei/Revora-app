@@ -1,4 +1,5 @@
-import { carImg } from "./carImages.js";
+import { carImgForTrim } from "./carImages.js";
+import { applyTrimVariation } from "./trim-specs.js";
 import { iranianBrands as legacyIranianBrands } from "./iran.js";
 
 /** Cars already in the original iran.js seed — skip duplicates. */
@@ -275,14 +276,22 @@ function shouldSkip(brand, model, trim) {
 function mkCar(brand, model, trim, imageKey, profile, year = 2020, extra = {}) {
   if (shouldSkip(brand, model, trim)) return null;
   const base = PROFILES[profile] || PROFILES.compactS;
+  const specs = applyTrimVariation(
+    {
+      ...base,
+      features: extra.features || ["ABS", "Airbags", "Iranian market spec"],
+    },
+    trim,
+    model,
+  );
   return {
     trim,
     year,
-    images: carImg(imageKey),
-    ...base,
+    images: carImgForTrim(imageKey, trim),
+    ...specs,
     ...extra,
-    description: `${model} ${trim} — مدل شناخته‌شده بازار ایران در کاتالوگ REVORA.`,
-    features: extra.features || ["ABS", "Airbags", "Iranian market spec"],
+    features: specs.features,
+    description: extra.description || `${model} ${trim} — مدل شناخته‌شده بازار ایران در کاتالوگ REVORA.`,
   };
 }
 
@@ -308,7 +317,7 @@ function buildRawEntries() {
   push("Iran Khodro", "Peugeot Pars", "Pars", "LX", "ikco_peugeot_pars", "compactS", 2018);
   push("Iran Khodro", "Peugeot Pars", "Pars", "سال", "ikco_peugeot_pars", "compactS", 2019);
   for (const t of ["206", "تیپ 1", "تیپ 2", "تیپ 3", "تیپ 4", "تیپ 5", "تیپ 6"]) {
-    push("Iran Khodro", "Peugeot 206", "206", t, "ikco_peugeot_206", "compactH", 2010);
+    push("Iran Khodro", "Peugeot 206", "206", t, "ikco_peugeot_206_hatch", "compactH", 2010);
   }
   for (const t of ["206 SD", "SD V1", "SD V2", "SD V10"]) {
     push("Iran Khodro", "Peugeot 206", "206", t, "ikco_peugeot_206", "compactH", 2015);
@@ -386,22 +395,24 @@ function buildRawEntries() {
   for (const t of ["5", "5 دو در", "5 چهار در"]) push("Saipa", "Renault 5", "5", t, "saipa_renault_5", "micro", 1985);
   push("Saipa", "Renault 21", "21", "21", "saipa_renault_21", "compactS", 1990);
   push("Saipa", "Pride", "Base", "پراید", "saipa_pride_111", "micro", 2005);
-  for (const t of ["صبا", "نسیم", "استیشن"]) push("Saipa", "Pride", "Base", t, "saipa_pride_111", "micro", 2000);
+  push("Saipa", "Pride", "Base", "صبا", "saipa_pride_saba", "micro", 2000);
+  push("Saipa", "Pride", "Base", "نسیم", "saipa_pride_nasim", "micro", 2000);
+  push("Saipa", "Pride", "Base", "استیشن", "saipa_pride_station", "micro", 2000);
 
-  // Pride 111/131/132/141/151 programmatic
+  // Pride 111/131/132/141/151 programmatic — separate image keys per generation
   for (const s of ["", "EX", "LE", "SE", "SL", "SX"]) {
     push("Saipa", "Pride", "111", `111${s ? ` ${s}` : ""}`, "saipa_pride_111", "micro", 2015);
   }
   for (const s of ["", "EX", "LE", "SE", "SL", "SX", "TL"]) {
-    push("Saipa", "Pride", "131", `131${s ? ` ${s}` : ""}`, "saipa_pride_111", "micro", 2014);
+    push("Saipa", "Pride", "131", `131${s ? ` ${s}` : ""}`, "saipa_pride_131", "micro", 2014);
   }
   for (const s of ["", "EX", "LE", "SE", "SL", "SX"]) {
     push("Saipa", "Pride", "132", `132${s ? ` ${s}` : ""}`, "saipa_pride_132", "micro", 2014);
   }
   for (const s of ["", "EX", "LE", "SE", "SL", "SX"]) {
-    push("Saipa", "Pride", "141", `141${s ? ` ${s}` : ""}`, "saipa_pride_111", "micro", 2013);
+    push("Saipa", "Pride", "141", `141${s ? ` ${s}` : ""}`, "saipa_pride_141", "micro", 2013);
   }
-  for (const s of ["", "SE"]) push("Saipa", "Pride", "151", `151${s ? ` ${s}` : ""}`, "saipa_pride_111", "micro", 2012);
+  for (const s of ["", "SE"]) push("Saipa", "Pride", "151", `151${s ? ` ${s}` : ""}`, "saipa_pride_151", "micro", 2012);
 
   push("Saipa", "Xantia", "Xantia", "زانتیا", "saipa_zantia", "compactS", 2001);
   push("Saipa", "Xantia", "Xantia", "1800", "saipa_zantia", "compactS", 2002);

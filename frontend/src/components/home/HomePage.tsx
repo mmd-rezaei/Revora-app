@@ -28,15 +28,13 @@ import {
 } from "@/lib/gsap/gsapUtils";
 
 import {
-  horizontalCardDepth,
-  horizontalScrollTrack,
   revealUp,
   scaleReveal,
   scrollDepth,
-  scrollText,
   scrubClipReveal,
   scrubReveal,
   speedReveal,
+  staggerChildren,
 } from "@/lib/gsap/presets";
 
 import { MOTION, SCROLL } from "@/lib/gsap/tokens";
@@ -49,15 +47,15 @@ import "./HomePage.scss";
 export default function HomePage() {
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const galleryTrackRef = useRef<HTMLDivElement>(null);
-  const brandTrackRef = useRef<HTMLDivElement>(null);
+  const FEATURED_COUNT = 4;
+  const BRAND_COUNT = 12;
 
   const { data: featured } = useQuery({
     queryKey: ["cars", "featured"],
     queryFn: () =>
       fetchCars({
         sort: "horsepower",
-        limit: 8,
+        limit: FEATURED_COUNT,
       }),
   });
 
@@ -74,6 +72,9 @@ export default function HomePage() {
     queryKey: ["brands"],
     queryFn: fetchBrands,
   });
+
+  const featuredCars = featured?.items ?? [];
+  const popularBrands = brands.slice(0, BRAND_COUNT);
 
   const heroCar = featured?.items?.[0];
 
@@ -104,7 +105,6 @@ export default function HomePage() {
     if (prefersReducedMotion()) return;
 
     let mmCleanup: (() => void) | undefined;
-    let horizontalCleanup: (() => void) | undefined;
 
     const ctx = gsap.context(() => {
       /*
@@ -188,8 +188,8 @@ export default function HomePage() {
         .from(
           ".hero-image-inner",
           {
-            scale: 1.18,
-            x: 35,
+            scale: 1.08,
+            x: 20,
             duration: 1.2,
             ease: "power3.out",
           },
@@ -214,8 +214,8 @@ export default function HomePage() {
        */
 
       gsap.to(".hero-image-inner", {
-        xPercent: -3,
-        scale: 1.055,
+        xPercent: -2,
+        scale: 1.03,
         duration: 9,
         repeat: -1,
         yoyo: true,
@@ -223,8 +223,7 @@ export default function HomePage() {
       });
 
       gsap.to(".hero-image-glow", {
-        scale: 1.12,
-        opacity: 0.75,
+        opacity: 0.55,
         duration: 3,
         repeat: -1,
         yoyo: true,
@@ -320,11 +319,8 @@ export default function HomePage() {
             .to(
               ".hero-image",
               {
-                y: 40,
-                rotateY: -10,
-                rotateX: 3,
-                scale: 0.93,
-                transformPerspective: 1000,
+                y: 32,
+                opacity: 0.92,
                 ease: "none",
               },
               0.2,
@@ -332,7 +328,7 @@ export default function HomePage() {
             .to(
               ".hero-image-inner",
               {
-                xPercent: -8,
+                xPercent: -4,
                 scale: 1.02,
                 ease: "none",
               },
@@ -341,8 +337,7 @@ export default function HomePage() {
             .to(
               ".hero-image-glow",
               {
-                scale: 1.4,
-                opacity: 1,
+                opacity: 0.65,
                 ease: "none",
               },
               0.2,
@@ -370,13 +365,18 @@ export default function HomePage() {
               0.6,
             );
 
-          scrollDepth(heroImage, heroZone, {
-            y: -35,
-            scale: 1.08,
-            rotateY: -3,
-            start: "top bottom",
-            end: "bottom top",
-          });
+          const heroImageInner = heroImage.querySelector(
+            ".hero-image-inner",
+          ) as HTMLElement | null;
+
+          if (heroImageInner) {
+            scrollDepth(heroImageInner, heroZone, {
+              y: -20,
+              scale: 1.03,
+              start: "top bottom",
+              end: "bottom top",
+            });
+          }
 
           scrollDepth(heroBackground, heroZone, {
             y: 100,
@@ -442,95 +442,20 @@ export default function HomePage() {
           ) as HTMLElement | null;
 
           if (mobileImage && heroZone) {
-            scrollDepth(mobileImage, heroZone, {
-              y: -20,
-              scale: 1.04,
-              start: "top bottom",
-              end: "bottom top",
-            });
+            const mobileInner = mobileImage.querySelector(
+              ".hero-image-inner",
+            ) as HTMLElement | null;
+
+            if (mobileInner) {
+              scrollDepth(mobileInner, heroZone, {
+                y: -12,
+                scale: 1.02,
+                start: "top bottom",
+                end: "bottom top",
+              });
+            }
           }
         });
-
-        /*
-         * =======================================================
-         * FEATURED MACHINES
-         * =======================================================
-         */
-
-        const gallery = galleryTrackRef.current;
-
-        const gallerySection = gallery?.closest(
-          ".car-gallery-section",
-        ) as HTMLElement | null;
-
-        if (gallery && gallerySection) {
-          horizontalScrollTrack(gallery, gallerySection, {
-            pin: true,
-            endExtra: "+=180%",
-            scrub: 1,
-          });
-
-          horizontalCleanup = horizontalCardDepth(gallery, {
-            selector: ".featured-card",
-            strength: 1.15,
-          });
-
-          const galleryTitle = gallerySection.querySelector(
-            ".section-title",
-          ) as HTMLElement | null;
-
-          if (galleryTitle) {
-            scrollText(galleryTitle, gallerySection, {
-              x: 80,
-              y: 20,
-              scale: 0.92,
-              start: "top 80%",
-              end: "top 35%",
-            });
-          }
-        }
-
-        /*
-         * =======================================================
-         * POPULAR BRANDS
-         * =======================================================
-         */
-
-        const brandTrack = brandTrackRef.current;
-
-        const brandSection = brandTrack?.closest(
-          ".brand-scroll-section",
-        ) as HTMLElement | null;
-
-        if (brandTrack && brandSection) {
-          horizontalScrollTrack(brandTrack, brandSection, {
-            pin: false,
-            endExtra: "+=80%",
-            scrub: 1,
-          });
-
-          gsap.utils
-            .toArray<HTMLElement>(".brand-card")
-            .forEach((card, index) => {
-              speedReveal(card, brandSection, {
-                x: 90 + index * 8,
-                start: "top 90%",
-                end: "top 50%",
-              });
-
-              gsap.to(card, {
-                rotateY: index % 2 === 0 ? 3 : -3,
-                ease: "none",
-
-                scrollTrigger: {
-                  trigger: card,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: true,
-                },
-              });
-            });
-        }
 
         /*
          * =======================================================
@@ -630,18 +555,20 @@ export default function HomePage() {
           });
 
           scaleReveal(rootRef.current, ".gsap-scale-reveal");
+
+          staggerChildren(rootRef.current, ".featured-grid", { stagger: 0.08 });
+          staggerChildren(rootRef.current, ".brand-grid", { stagger: 0.05 });
         }
       });
     }, rootRef);
 
     return () => {
-      horizontalCleanup?.();
       mmCleanup?.();
       ctx.revert();
     };
   }, [
     brands.length,
-    featured?.items.length,
+    featuredCars.length,
     latest?.items.length,
     heroCar?.id,
   ]);
@@ -778,24 +705,22 @@ export default function HomePage() {
       ======================================================= */}
 
       <Box className="car-gallery-section">
-        <Container maxWidth="lg" className="section-heading-container">
-          <Box className="section-title">
+        <Container maxWidth="lg">
+          <Box className="section-title section-heading-container">
             <SectionHeader
               title="Featured machines"
-              subtitle="Scroll through high-output cars ready to configure and tune."
+              subtitle="Four high-output cars ready to configure and tune."
             />
           </Box>
-        </Container>
 
-        <Box className="horizontal-viewport">
-          <Box ref={galleryTrackRef} className="featured-track">
-            {(featured?.items || []).map((car) => (
-              <Box key={car.id} className="featured-card">
+          <Box className="featured-grid gsap-stagger-container">
+            {featuredCars.map((car) => (
+              <Box key={car.id} className="featured-card gsap-stagger-item">
                 <CarCard car={car} />
               </Box>
             ))}
           </Box>
-        </Box>
+        </Container>
       </Box>
 
       {/* =======================================================
@@ -803,23 +728,21 @@ export default function HomePage() {
       ======================================================= */}
 
       <Box className="brand-scroll-section">
-        <Container maxWidth="lg" className="section-heading-container">
-          <Box className="section-title">
+        <Container maxWidth="lg">
+          <Box className="section-title section-heading-container">
             <SectionHeader
               title="Popular brands"
-              subtitle="A growing catalog. Brand, model, generation, trim."
+              subtitle="Twelve brands from the catalog. Brand, model, generation, trim."
             />
           </Box>
-        </Container>
 
-        <Box className="horizontal-viewport horizontal-viewport--brands">
-          <Box ref={brandTrackRef} className="brand-track">
-            {brands.map((brand) => (
+          <Box className="brand-grid gsap-stagger-container">
+            {popularBrands.map((brand) => (
               <Box
                 key={brand.id}
                 component={Link}
                 href={`/brands/${brand.slug}`}
-                className="brand-card"
+                className="brand-card gsap-stagger-item"
               >
                 <Typography variant="overline" className="brand-card__country">
                   {brand.country}
@@ -835,7 +758,15 @@ export default function HomePage() {
               </Box>
             ))}
           </Box>
-        </Box>
+
+          {brands.length > BRAND_COUNT ? (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+              <RevoraButton component={Link} href="/brands" variant="outlined">
+                View all brands
+              </RevoraButton>
+            </Box>
+          ) : null}
+        </Container>
       </Box>
 
       {/* =======================================================

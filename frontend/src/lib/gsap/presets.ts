@@ -246,17 +246,13 @@ export function horizontalCardDepth(
 
       const abs = Math.abs(clamped);
 
-      const scale = 1 - abs * 0.1 * strength;
-      const rotateY = clamped * -7 * strength;
-      const y = abs * 18 * strength;
-      const opacity = 1 - abs * 0.25 * strength;
+      const scale = gsap.utils.clamp(0.9, 1, 1 - abs * 0.05 * strength);
+      const opacity = gsap.utils.clamp(0.72, 1, 1 - abs * 0.2 * strength);
 
       gsap.set(card, {
         scale,
-        rotateY,
-        y,
+        y: abs * 4 * strength,
         opacity,
-        transformPerspective: 1200,
         transformOrigin: "center center",
       });
     });

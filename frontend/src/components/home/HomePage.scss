@@ -60,9 +60,7 @@
 
   gap: 48px;
 
-  overflow: hidden;
-
-  transform-style: preserve-3d;
+  overflow: clip;
 }
 
 .hero-bg-depth {
@@ -164,12 +162,13 @@
 
   width: 100%;
   max-width: 650px;
+  min-width: 0;
 
   margin-left: auto;
 
   gap: 32px;
 
-  transform-style: preserve-3d;
+  overflow: clip;
 }
 
 /* =========================================================
@@ -250,18 +249,19 @@
 
   width: 100%;
   max-width: 100%;
+  min-width: 0;
 
   aspect-ratio: 16 / 10;
 
-  overflow: hidden;
+  overflow: clip;
+  isolation: isolate;
 
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 4px;
 
   text-decoration: none;
 
-  transform-style: preserve-3d;
-  transform-origin: center center;
+  contain: paint;
 
   will-change: transform, opacity, clip-path;
 
@@ -271,13 +271,13 @@
 .hero-image-glow {
   position: absolute;
 
-  inset: -20px;
+  inset: 0;
 
   z-index: 0;
 
   background: radial-gradient(circle, rgba(255, 74, 0, 0.22), transparent 68%);
 
-  opacity: 0.5;
+  opacity: 0.4;
 
   pointer-events: none;
 
@@ -287,11 +287,13 @@
 .hero-image-inner {
   position: absolute;
 
-  inset: -8% -5%;
+  inset: 0;
 
   z-index: 1;
 
-  transform-style: preserve-3d;
+  overflow: clip;
+
+  transform-origin: center center;
 
   will-change: transform;
 }
@@ -328,58 +330,30 @@
   overflow: hidden;
 }
 
-/*
- * This is the actual viewport.
- *
- * IMPORTANT:
- * The track can be wider than the screen,
- * but this wrapper must never be wider than the viewport.
- */
+.featured-grid {
+  display: grid;
 
-.horizontal-viewport {
-  position: relative;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   width: 100%;
   max-width: 100%;
 
-  overflow: hidden;
-}
-
-/*
- * GSAP moves this element horizontally.
- *
- * width: max-content is intentional.
- * flex-shrink: 0 on cards prevents cards from collapsing.
- */
-
-.featured-track {
-  display: flex;
-  align-items: stretch;
-
-  width: max-content;
-  max-width: none;
-
   gap: 24px;
-
-  padding: 0 64px 24px;
-
-  perspective: 1200px;
-
-  will-change: transform;
-
-  transform-style: preserve-3d;
 }
 
 .featured-card {
-  flex: 0 0 360px;
+  min-width: 0;
 
-  width: 360px;
-  min-width: 360px;
-  max-width: 360px;
+  width: 100%;
+  max-width: 100%;
 
-  transform-style: preserve-3d;
+  overflow: visible;
 
-  will-change: transform, opacity;
+  border-radius: 4px;
+}
+
+.featured-card .car-card {
+  overflow: clip;
 }
 
 /* =========================================================
@@ -397,36 +371,22 @@
   overflow: hidden;
 }
 
-.horizontal-viewport--brands {
-  overflow: hidden;
-}
+.brand-grid {
+  display: grid;
 
-.brand-track {
-  display: flex;
-  align-items: stretch;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 
-  width: max-content;
-  max-width: none;
+  width: 100%;
+  max-width: 100%;
 
   gap: 16px;
-
-  margin-top: 40px;
-
-  padding: 0 64px 24px;
-
-  perspective: 1200px;
-
-  will-change: transform;
-
-  transform-style: preserve-3d;
 }
 
 .brand-card {
-  flex: 0 0 220px;
+  min-width: 0;
 
-  width: 220px;
-  min-width: 220px;
-  max-width: 220px;
+  width: 100%;
+  max-width: 100%;
 
   min-height: 150px;
 
@@ -434,7 +394,10 @@
 
   box-sizing: border-box;
 
+  overflow: clip;
+
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
 
   background: rgba(255, 255, 255, 0.025);
 
@@ -442,7 +405,7 @@
 
   text-decoration: none;
 
-  transform-style: preserve-3d;
+  contain: paint;
 
   will-change: transform, opacity;
 
@@ -474,6 +437,11 @@
   font-size: 24px !important;
 
   line-height: 1.1 !important;
+
+  overflow: hidden;
+
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .brand-card__count {
@@ -597,10 +565,12 @@
     gap: 24px;
   }
 
-  .featured-track,
-  .brand-track {
-    padding-right: 40px;
-    padding-left: 40px;
+  .featured-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brand-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -685,26 +655,14 @@
     padding: 72px 0;
   }
 
-  .featured-track,
-  .brand-track {
-    padding-right: 24px;
-    padding-left: 24px;
+  .featured-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
   }
 
-  .featured-card {
-    flex-basis: 78vw;
-
-    width: 78vw;
-    min-width: 78vw;
-    max-width: 78vw;
-  }
-
-  .brand-card {
-    flex-basis: 210px;
-
-    width: 210px;
-    min-width: 210px;
-    max-width: 210px;
+  .brand-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .latest-section {
@@ -763,35 +721,19 @@
     font-size: 16px !important;
   }
 
-  .featured-track {
+  .featured-grid {
+    grid-template-columns: minmax(0, 1fr);
+
     gap: 16px;
-
-    padding-right: 16px;
-    padding-left: 16px;
   }
 
-  .brand-track {
+  .brand-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
     gap: 12px;
-
-    padding-right: 16px;
-    padding-left: 16px;
-  }
-
-  .featured-card {
-    flex-basis: calc(100vw - 32px);
-
-    width: calc(100vw - 32px);
-    min-width: calc(100vw - 32px);
-    max-width: calc(100vw - 32px);
   }
 
   .brand-card {
-    flex-basis: 200px;
-
-    width: 200px;
-    min-width: 200px;
-    max-width: 200px;
-
     padding: 20px;
   }
 
@@ -826,13 +768,6 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .featured-card {
-    flex-basis: calc(100vw - 24px);
-
-    width: calc(100vw - 24px);
-    min-width: calc(100vw - 24px);
-    max-width: calc(100vw - 24px);
-  }
 }
 
 /* =========================================================

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useRef } from "react";
+import { use, useEffect, useMemo, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -22,6 +22,8 @@ import { prefersReducedMotion, registerGsapPlugins } from "@/lib/gsap/gsapUtils"
 import { clipReveal, revealUp, scrubParallax } from "@/lib/gsap/presets";
 import { revoraColors } from "@/theme/colors";
 import { specFont } from "@/theme/revoraTheme";
+import { getCarCoverImage, getCarGallery } from "@/lib/carImages";
+import ImageLightbox from "@/components/ui/ImageLightbox";
 
 export default function CarDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -84,7 +86,25 @@ export default function CarDetailPage({ params }: { params: Promise<{ slug: stri
     return () => ctx.revert();
   }, [car]);
 
+  const gallery = useMemo(() => getCarGallery(car?.images), [car?.images]);
+  const [activeImage, setActiveImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveImage(0);
+    setLightboxOpen(false);
+  }, [car?.id]);
+
+  const openLightbox = (index: number) => {
+    setActiveImage(index);
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
   if (isLoading || !car) return <PageLoader />;
+
+  const heroImage = gallery[activeImage] || getCarCoverImage(car.images);
 
   return (
     <>
@@ -98,14 +118,29 @@ export default function CarDetailPage({ params }: { params: Promise<{ slug: stri
           overflow: "hidden",
         }}
       >
-        <Box ref={imageRef} sx={{ position: "absolute", inset: "-10% 0 0 0", height: "120%" }}>
+        <Box
+          ref={imageRef}
+          component="button"
+          type="button"
+          onClick={() => gallery.length && openLightbox(activeImage)}
+          aria-label="Open photo gallery"
+          sx={{
+            position: "absolute",
+            inset: "-10% 0 0 0",
+            height: "120%",
+            p: 0,
+            border: 0,
+            cursor: gallery.length ? "zoom-in" : "default",
+            bgcolor: "transparent",
+          }}
+        >
           <Image
-            src={car.images[0] || "/next.svg"}
+            src={heroImage}
             alt={`${car.brandName} ${car.modelName}`}
             fill
             priority
             sizes="100vw"
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "cover", pointerEvents: "none" }}
           />
         </Box>
         <Box
@@ -159,6 +194,32 @@ export default function CarDetailPage({ params }: { params: Promise<{ slug: stri
               {favorite ? "In garage" : "Add to garage"}
             </RevoraButton>
           </Box>
+          {gallery.length > 1 ? (
+            <Box className="page-child" sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 4 }}>
+              {gallery.map((src, index) => (
+                <Box
+                  key={src}
+                  component="button"
+                  type="button"
+                  onClick={() => openLightbox(index)}
+                  aria-label={`Open image ${index + 1}`}
+                  sx={{
+                    p: 0,
+                    border: index === activeImage ? `2px solid ${revoraColors.signal}` : `1px solid ${revoraColors.border}`,
+                    borderRadius: 1,
+                    overflow: "hidden",
+                    cursor: "pointer",
+                    bgcolor: "transparent",
+                    width: 96,
+                    height: 64,
+                    position: "relative",
+                  }}
+                >
+                  <Image src={src} alt="" fill sizes="96px" style={{ objectFit: "cover" }} />
+                </Box>
+              ))}
+            </Box>
+          ) : null}
           <Typography className="page-child detail-desc" color="text.secondary" sx={{ maxWidth: 760, mb: 4, fontSize: 18, lineHeight: 1.7 }}>
             {car.description}
           </Typography>
@@ -186,6 +247,15 @@ export default function CarDetailPage({ params }: { params: Promise<{ slug: stri
           </Box>
         </Container>
       </PageReveal>
+
+      <ImageLightbox
+        images={gallery.length ? gallery : [heroImage]}
+        initialIndex={lightboxIndex}
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        onIndexChange={setActiveImage}
+        alt={`${car.brandName} ${car.modelName} ${car.trim}`}
+      />
     </>
   );
 }
