@@ -14,6 +14,17 @@ export const previewPerformance = (body: {
 
 export const fetchBuilds = () => api<Build[]>("/builds");
 
+export const fetchBuild = (id: string) => api<Build>(`/builds/${id}`);
+
+export const updateBuild = (
+  id: string,
+  body: Partial<{
+    name: string;
+    installedParts: string[];
+    config: BuildConfig;
+  }>,
+) => api<Build>(`/builds/${id}`, { method: "PUT", body: JSON.stringify(body) });
+
 export const createBuild = (body: {
   carId: string;
   name: string;

@@ -31,7 +31,12 @@ export const IRANIAN_IMAGES = {
     "Peugeot 206 SD 01 2023-06-29.jpg",
   ],
   ikco_peugeot_207i: ["Peugeot 207i.jpg"],
-  ikco_peugeot_pars: ["Peugeot Pars 16V Motorcade.jpg", "Peugeot pars iran.jpg"],
+  ikco_peugeot_pars: [
+    "Peugeot Pars 01 2024-05-07.jpg",
+    "Peugeot Pars 02 2024-05-07.jpg",
+    "Peugeot Pars Face.jpg",
+    "Peugeot pars iran.jpg",
+  ],
   ikco_peugeot_2008: ["2020 Peugeot 2008 Allure Front.jpg", "Peugeot 2008 II 001.jpg"],
   ikco_dena_plus: ["Dena Plus 01.jpg", "IKCO Dena Plus 2019 (1398) Tehran front.jpg"],
   ikco_dena_plus_turbo: ["Dena Plus Turbo Iran Khodro.jpg", "IKCO Dena Plus 2019 (1398) Tehran front.jpg"],

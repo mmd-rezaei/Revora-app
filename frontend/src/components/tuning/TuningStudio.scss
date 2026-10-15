@@ -1,0 +1,21 @@
+.tuning-studio {
+  overflow-x: hidden;
+}
+
+.tuning-scene canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.drive-overlay {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tuning-panel,
+  .drive-overlay {
+    transition: none !important;
+    animation: none !important;
+  }
+}

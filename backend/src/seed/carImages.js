@@ -259,7 +259,9 @@ export const CAR_IMAGES = {
   ikco_peugeot_207i: [wiki("Peugeot 207i.jpg"), wiki("Peugeot 207i.jpg")],
 
   ikco_peugeot_pars: [
-    wiki("Peugeot Pars 16V Motorcade.jpg"),
+    wiki("Peugeot Pars 01 2024-05-07.jpg"),
+    wiki("Peugeot Pars 02 2024-05-07.jpg"),
+    wiki("Peugeot Pars Face.jpg"),
     wiki("Peugeot pars iran.jpg"),
   ],
 

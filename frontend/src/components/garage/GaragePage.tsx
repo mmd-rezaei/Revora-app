@@ -18,7 +18,8 @@ import EmptyState from "@/components/ui/EmptyState";
 import PageLoader from "@/components/ui/PageLoader";
 import RevoraButton from "@/components/ui/RevoraButton";
 import PageReveal from "@/components/ui/PageReveal";
-import { deleteBuild, fetchBuilds, fetchFavorites, removeFavorite } from "@/lib/api/builds";
+import { createBuild, deleteBuild, fetchBuilds, fetchFavorites, removeFavorite } from "@/lib/api/builds";
+import { useBuildStore } from "@/store/buildStore";
 import { prefersReducedMotion, registerGsapPlugins } from "@/lib/gsap/gsapUtils";
 import { revoraColors } from "@/theme/colors";
 import type { Car } from "@/types";
@@ -27,6 +28,7 @@ function GarageContent() {
   const [tab, setTab] = useState(0);
   const gridRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  const { load, duplicate } = useBuildStore();
   const { data: builds = [], isLoading: loadingBuilds } = useQuery({ queryKey: ["builds"], queryFn: fetchBuilds });
   const { data: favorites = [], isLoading: loadingFavs } = useQuery({ queryKey: ["favorites"], queryFn: fetchFavorites });
 
@@ -38,6 +40,19 @@ function GarageContent() {
     mutationFn: removeFavorite,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["favorites"] }),
   });
+  const duplicateMutation = useMutation({
+    mutationFn: createBuild,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["builds"] }),
+  });
+
+  const resumeBuild = (build: (typeof builds)[0]) => {
+    const car = typeof build.carId === "object" ? build.carId : null;
+    if (!car) return;
+    const partIds = (build.installedParts as { id: string }[]).map((p) =>
+      typeof p === "string" ? p : p.id,
+    );
+    load({ buildId: build.id, buildName: build.name, installedParts: partIds, config: build.config });
+  };
 
   useEffect(() => {
     if (!gridRef.current || prefersReducedMotion()) return;
@@ -84,10 +99,50 @@ function GarageContent() {
                             <Typography color="text.secondary">{build.calculatedPerformance?.zeroToHundred}s 0–100</Typography>
                           </Box>
                         </Box>
-                        <Box sx={{ display: "flex", gap: 1 }}>
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                           {car ? (
-                            <RevoraButton component={Link} href={`/tune/${car.id}`} size="small" variant="contained">
-                              Continue tuning
+                            <RevoraButton
+                              component={Link}
+                              href={`/tune/${car.id}?build=${build.id}`}
+                              size="small"
+                              variant="contained"
+                              onClick={() => resumeBuild(build)}
+                            >
+                              Open
+                            </RevoraButton>
+                          ) : null}
+                          {car ? (
+                            <RevoraButton
+                              component={Link}
+                              href={`/build/${build.id}`}
+                              size="small"
+                            >
+                              Share
+                            </RevoraButton>
+                          ) : null}
+                          {car ? (
+                            <RevoraButton
+                              size="small"
+                              onClick={() => {
+                                duplicate();
+                                load({
+                                  buildName: `${build.name} Copy`,
+                                  installedParts: (build.installedParts as { id: string }[]).map((p) =>
+                                    typeof p === "string" ? p : p.id,
+                                  ),
+                                  config: build.config,
+                                });
+                                duplicateMutation.mutate({
+                                  carId: car.id,
+                                  name: `${build.name} Copy`,
+                                  installedParts: (build.installedParts as { id: string }[]).map((p) =>
+                                    typeof p === "string" ? p : p.id,
+                                  ),
+                                  config: build.config,
+                                });
+                              }}
+                            >
+                              Duplicate
                             </RevoraButton>
                           ) : null}
                           <RevoraButton size="small" onClick={() => deleteMutation.mutate(build.id)}>

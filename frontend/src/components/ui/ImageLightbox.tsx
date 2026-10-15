@@ -37,9 +37,9 @@ export default function ImageLightbox({
   }, [open, initialIndex]);
 
   const goTo = useCallback(
-    (next: number) => {
-      setIndex(next);
-      onIndexChange?.(next);
+    (nextIndex: number) => {
+      setIndex(nextIndex);
+      onIndexChange?.(nextIndex);
     },
     [onIndexChange],
   );
@@ -70,7 +70,10 @@ export default function ImageLightbox({
     };
 
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+
+    return () => {
+      window.removeEventListener("keydown", onKey);
+    };
   }, [open, onClose, prev, next]);
 
   if (!images.length) return null;
@@ -83,10 +86,12 @@ export default function ImageLightbox({
       onClose={onClose}
       fullScreen
       aria-labelledby="car-image-lightbox-title"
-      PaperProps={{
-        sx: {
-          bgcolor: revoraColors.bgDeep,
-          backgroundImage: "none",
+      slotProps={{
+        paper: {
+          sx: {
+            bgcolor: revoraColors.bgDeep,
+            backgroundImage: "none",
+          },
         },
       }}
     >
@@ -109,9 +114,15 @@ export default function ImageLightbox({
             borderBottom: `1px solid ${revoraColors.border}`,
           }}
         >
-          <Typography id="car-image-lightbox-title" variant="subtitle2" color="text.secondary">
-            {alt} · {index + 1} / {images.length}
+          {" "}
+          <Typography
+            id="car-image-lightbox-title"
+            variant="subtitle2"
+            color="text.secondary"
+          >
+            {alt} · {index + 1} / {images.length}{" "}
           </Typography>
+          ```
           <IconButton onClick={onClose} aria-label="Close gallery" edge="end">
             <CloseIcon />
           </IconButton>
@@ -138,7 +149,9 @@ export default function ImageLightbox({
                 left: { xs: 4, md: 16 },
                 zIndex: 2,
                 bgcolor: "rgba(0,0,0,0.45)",
-                "&:hover": { bgcolor: "rgba(0,0,0,0.65)" },
+                "&:hover": {
+                  bgcolor: "rgba(0,0,0,0.65)",
+                },
               }}
             >
               <ChevronLeftIcon />
@@ -173,7 +186,9 @@ export default function ImageLightbox({
                 right: { xs: 4, md: 16 },
                 zIndex: 2,
                 bgcolor: "rgba(0,0,0,0.45)",
-                "&:hover": { bgcolor: "rgba(0,0,0,0.65)" },
+                "&:hover": {
+                  bgcolor: "rgba(0,0,0,0.65)",
+                },
               }}
             >
               <ChevronRightIcon />
@@ -216,7 +231,13 @@ export default function ImageLightbox({
                   position: "relative",
                 }}
               >
-                <Image src={src} alt="" fill sizes="88px" style={{ objectFit: "cover" }} />
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  sizes="88px"
+                  style={{ objectFit: "cover" }}
+                />
               </Box>
             ))}
           </Box>

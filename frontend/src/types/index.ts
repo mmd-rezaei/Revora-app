@@ -79,6 +79,7 @@ export type BuildConfig = {
   exterior: Record<string, string>;
   wheels: Record<string, string>;
   interior: Record<string, string>;
+  vehicle?: Record<string, string>;
 };
 
 export type Performance = {

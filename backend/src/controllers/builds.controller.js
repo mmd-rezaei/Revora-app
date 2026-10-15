@@ -4,7 +4,7 @@ import { Build } from "../models/Build.js";
 import { Favorite } from "../models/Favorite.js";
 import { AppError, asyncHandler } from "../middleware/errorHandler.js";
 import { isObjectId } from "../utils/helpers.js";
-import { serializeBuild, serializeCar } from "../utils/serialize.js";
+import { serializeBuild, serializeCar, serializePart } from "../utils/serialize.js";
 import { calculatePerformance } from "../services/tuningEngine.js";
 
 export const listParts = asyncHandler(async (req, res) => {

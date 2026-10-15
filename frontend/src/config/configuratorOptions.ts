@@ -24,10 +24,4 @@ export const interiorOptions = {
   ambientLighting: ["Off", "White", "Red", "Blue", "Multi-Color"],
 };
 
-export const paintColors: Record<string, string> = {
-  "Alpine White": "#F5F5F5",
-  "Jet Black": "#0A0A0A",
-  "Toronto Red": "#C0392B",
-  "Portimao Blue": "#1A5276",
-  "Frozen Grey": "#7F8C8D",
-};
+export { paintColors } from "@/lib/tuning/paintPresets";

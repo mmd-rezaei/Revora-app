@@ -21,6 +21,7 @@ import { useBuildStore } from "@/store/buildStore";
 import { exteriorOptions, wheelOptions, interiorOptions, paintColors } from "@/config/configuratorOptions";
 import { prefersReducedMotion, registerGsapPlugins } from "@/lib/gsap/gsapUtils";
 import { pulseElement } from "@/lib/gsap/presets";
+import { getCarCoverImage } from "@/lib/carImages";
 import { revoraColors } from "@/theme/colors";
 
 const categories = [
@@ -145,7 +146,7 @@ export default function ConfigurePage({ params }: { params: Promise<{ carId: str
             className="config-preview page-child"
             sx={{ position: "relative", minHeight: { xs: 260, md: 480 }, overflow: "hidden", bgcolor: revoraColors.elevated }}
           >
-            <Image src={car.images[0] || "/next.svg"} alt={car.modelName} fill sizes="(max-width: 900px) 100vw, 55vw" style={{ objectFit: "cover" }} />
+            <Image src={getCarCoverImage(car.images)} alt={car.modelName} fill sizes="(max-width: 900px) 100vw, 55vw" style={{ objectFit: "cover" }} />
             <Box
               ref={paintRef}
               sx={{ position: "absolute", inset: 0, backgroundColor: paintColors[paint], mixBlendMode: "soft-light", opacity: 0.45 }}
