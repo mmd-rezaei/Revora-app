@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "revora-api",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-18",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "nodejs_compat_populate_process_env",
+  ],
+  "vars": {
+    "NODE_ENV": "production",
+    "FRONTEND_ORIGIN": "https://frontend.mohammadrf1084.workers.dev",
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "REVORA_API",
+        "class_name": "RevoraApi",
+      },
+    ],
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["RevoraApi"],
+    },
+  ],
+}

@@ -9,7 +9,9 @@ export class ApiError extends Error {
   }
 }
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
+const BASE =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://revora-api.mohammadrf1084.workers.dev/api";
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers);
@@ -32,7 +34,9 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   return payload as T;
 }
 
-export function queryString(params: Record<string, string | number | undefined>) {
+export function queryString(
+  params: Record<string, string | number | undefined>,
+) {
   const search = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     if (value === undefined || value === "") continue;

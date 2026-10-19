@@ -1,25 +1,31 @@
 import mongoose from "mongoose";
 import { env } from "./env.js";
 
+let connectionPromise;
+
 export async function connectDb() {
   mongoose.set("strictQuery", true);
 
-  try {
-    await mongoose.connect(env.MONGODB_URI, { serverSelectionTimeoutMS: 2500 });
-    console.log("Connected to MongoDB");
+  if (mongoose.connection.readyState === 1) {
     return;
-  } catch (err) {
-    if (env.NODE_ENV === "production") {
-      throw err;
-    }
   }
 
-  const { MongoMemoryServer } = await import("mongodb-memory-server");
-  const memory = await MongoMemoryServer.create();
-  await mongoose.connect(memory.getUri("revora"));
-  console.log("Local MongoDB not found. Using in-memory database for this session.");
+  if (!connectionPromise) {
+    connectionPromise = mongoose.connect(env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000,
+    });
+  }
+
+  try {
+    await connectionPromise;
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    connectionPromise = undefined;
+    throw error;
+  }
 }
 
 export async function disconnectDb() {
+  connectionPromise = undefined;
   await mongoose.disconnect();
 }
